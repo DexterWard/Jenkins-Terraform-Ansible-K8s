@@ -36,3 +36,4 @@ If the initial Jenkins screen to input the admin password shows up, then the pro
 ssh -i your-key-pair.pem ubuntu@xxx.xxx.xxx.xxx
 and check that docker and Jenkins are running with: docker ps
 -
+3) Get the Jenkins admin password by login into the server via ssh and executing the following command: docker exec -ti jenkins sh -c "cat /var/jenkins_home/secrets/initialAdminPassword" Then, install the suggested plugins
