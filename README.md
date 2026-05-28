@@ -14,17 +14,17 @@ Technologies used:
 1) Create a Github repository
 2) Create an AWS EC2 instance. Recommended settings:
 
--AMI: Ubuntu Server 24.04 LTS
--Architecture: 64-bit
--Instance type: t3.small (free-tier)
--Create a new RSA key-pair with .pem format
--Default VPC and default subnet are fine as long as they have an Internet Gateway to access the outside world
--Use or create a security group with the following ingress rules:
- Port 22 open to your public IP. (Optionally, open it to the IP address of Instant connect too)
- Port 8080 open to 0.0.0.0/0 so the webhook can reach it
--Default 8 GIB gp3 storage disk
--No special filesystem
--User data: upload the startup-script.sh file to provision the server
+- AMI: Ubuntu Server 24.04 LTS
+- Architecture: 64-bit
+- Instance type: t3.small (free-tier)
+- Create a new RSA key-pair with .pem format
+- Default VPC and default subnet are fine as long as they have an Internet Gateway to access the outside world
+- Use or create a security group with the following ingress rules:
+  Port 22 open to your public IP. (Optionally, open it to the IP address of Instant connect too)
+  Port 8080 open to 0.0.0.0/0 so the webhook can reach it
+- Default 8 GIB gp3 storage disk
+- No special filesystem
+- User data: upload the startup-script.sh file to provision the server
 
 Test that Docker is installed and Jenkins is running by connecting to the Public IP address of the instance on port 8080, like this:
 xxx.xxx.xxx.xxx:8080
