@@ -11,6 +11,9 @@ Technologies used:
 - Nginx to server a static website
 
 
+
+STEPS:
+
 1) Create a Github repository
 2) Create an AWS EC2 instance. Recommended settings:
 
