@@ -57,5 +57,3 @@ and check that docker and Jenkins are running with: docker ps
 7) Create a new agent:
   - New node --> Node name --> Permanent agent --> Adjust the number of executors --> Remote root directory: /home/jenkins -- > Launch method: Launch agents via SSH --> Host: IP address of the agent --> Credentials: Select the credentials created in the previous step --> Host Key Verification Strategy: Known hosts file verification strategy
   - Check that the agent is synced and online
-
-8) 
