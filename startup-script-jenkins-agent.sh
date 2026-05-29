@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#Set hostname and time and date
+sudo hostnamectl set-hostname jenkins-agent
+timedatectl set-timezone Europe/Amsterdam
+
 #Install dependencies
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common openjdk-21-jdk
 
@@ -20,5 +24,6 @@ apt install -y python3 pipx
 pipx install --include-deps ansible
 su -u ubuntu -c "pipx ensurepath"
 
-
+#Create the Jenkins user
+useradd -m -s /bin/bash jenkins
 
