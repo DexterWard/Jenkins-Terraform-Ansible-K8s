@@ -36,4 +36,8 @@ If the initial Jenkins screen to input the admin password shows up, then the pro
 ssh -i your-key-pair.pem ubuntu@xxx.xxx.xxx.xxx
 and check that docker and Jenkins are running with: docker ps
 -
-3) Get the Jenkins admin password by login into the server via ssh and executing the following command: docker exec -ti jenkins sh -c "cat /var/jenkins_home/secrets/initialAdminPassword" Then, install the suggested plugins
+3) Get the Jenkins admin password by login into the server via ssh and executing the following command: docker exec -ti jenkins sh -c "cat /var/jenkins_home/secrets/initialAdminPassword" Then, install the suggested plugins and create an admin user and password to log in.
+
+4) Create a new EC2 instance (the jenkins agent) with the same settings but with only port 22 open. Upload as user-script to provision the machine the file: "startup-scrip-jenkins-agent.sh". This will install Terraform, Python3 and Ansible
+
+5) Log into the public IP of the Jenkins master via port 8080 and create a new node using the private IP address of the new EC2 instance (the jenkins agent)
