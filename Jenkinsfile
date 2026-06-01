@@ -7,7 +7,7 @@ pipeline {
             steps {
                 sh 'cd /home/Jenkins/'
                 sh 'git clone https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git'
-                git branch: main, url:"https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git"
+            //    git branch: main, url:"https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git"
                 sh 'cd Jenkins-Terraform-Ansible-K8s/'
             }
         }
@@ -15,14 +15,15 @@ pipeline {
         stage('Terraform') {
             environment {
                 REGION = credentials('REGION')
-                PROFILE = credentials('PROFILE')
                 ACCESS_KEY = credentials('ACCESS_KEY')
                 SECRET_KEY = credentials('SECRET_KEY')
+                INSTANCE_TYPE = credentials('INSTANCE_TYPE')
+                AMI = credentials('AMI')
             }
             steps {
                 sh 'cd Terraform'
                 sh 'terraform init'
-                sh 'terraform apply -auto-approve -var "region=${REGION},profile=${PROFILE},access_key=${ACCESS_KEY},secret_key=${SECRET_KEY}"'
+                sh 'terraform apply -auto-approve -var "region=${REGION},access_key=${ACCESS_KEY},secret_key=${SECRET_KEY},instance_type=${INSTANCE_TYPE},ami=${AMI}"'
             }
         }
 
