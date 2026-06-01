@@ -8,7 +8,6 @@ pipeline {
                 checkout scm
             //    sh 'git clone https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git'
             //    git branch: main, url:"https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git"
-                sh 'cd Jenkins-Terraform-Ansible-K8s/'
             }
         }
 
@@ -21,7 +20,7 @@ pipeline {
                 AMI = credentials('AMI')
             }
             steps {
-                sh 'cd Terraform'
+                sh 'cd Jenkins-Terraform-Ansible-K8s/Terraform'
                 sh 'terraform fmt'
                 sh 'terraform init'
                 sh 'terraform apply -auto-approve -var "region=${REGION},access_key=${ACCESS_KEY},secret_key=${SECRET_KEY},instance_type=${INSTANCE_TYPE},ami=${AMI}"'
