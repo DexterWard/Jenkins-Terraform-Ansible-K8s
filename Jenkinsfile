@@ -7,6 +7,7 @@ pipeline {
             steps {
                 sh 'cd /home/Jenkins/'
                 sh 'git clone https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git'
+                git branch: main, url:"https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git"
                 sh 'cd Jenkins-Terraform-Ansible-K8s/'
             }
         }
