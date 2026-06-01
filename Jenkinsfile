@@ -3,9 +3,10 @@ pipeline {
 
     stages {
 
-        stage('Create environment') {
+        stage('Checkout') {
             steps {
-                sh 'git clone https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git'
+                checkout scm
+            //    sh 'git clone https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git'
             //    git branch: main, url:"https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git"
                 sh 'cd Jenkins-Terraform-Ansible-K8s/'
             }
