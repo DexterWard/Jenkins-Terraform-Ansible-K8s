@@ -18,13 +18,14 @@ pipeline {
                 SECRET_KEY = credentials('SECRET_KEY')
                 INSTANCE_TYPE = credentials('INSTANCE_TYPE')
                 AMI = credentials('AMI')
+                
             }
             steps {
                 dir('/home/jenkins/workspace/Project1/Terraform') {
                 sh 'ls -l'
                 sh 'terraform fmt'
                 sh 'terraform init'
-                sh 'terraform apply -auto-approve -var "region=${REGION},access_key=${ACCESS_KEY},secret_key=${SECRET_KEY},instance_type=${INSTANCE_TYPE},ami=${AMI}"'
+                sh 'terraform apply -auto-approve -var "region=$REGION,access_key=$ACCESS_KEY,secret_key=$SECRET_KEY,instance_type=$INSTANCE_TYPE,ami=$AMI"'
                 }
                 
             }
