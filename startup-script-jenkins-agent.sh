@@ -22,8 +22,9 @@ apt install -y python3 pipx
 
 #Install Ansible
 pipx install --include-deps ansible
-su -u ubuntu -c "pipx ensurepath"
+
 
 #Create the Jenkins user
 useradd -m -s /bin/bash jenkins
+su -u jenkins -c "pipx ensurepath"
 
