@@ -21,7 +21,7 @@ pipeline {
             }
             steps {
                 sh 'pwd'
-                sh 'cd Terraform'
+            //    sh 'cd Terraform'
                 sh 'ls -l'
                 sh 'terraform fmt'
                 sh 'terraform init'
