@@ -21,7 +21,7 @@ pipeline {
             }
             steps {
                 sh 'pwd'
-                sh 'cd Jenkins-Terraform-Ansible-K8s/Terraform'
+                sh 'cd Terraform'
                 sh 'terraform fmt'
                 sh 'terraform init'
                 sh 'terraform apply -auto-approve -var "region=${REGION},access_key=${ACCESS_KEY},secret_key=${SECRET_KEY},instance_type=${INSTANCE_TYPE},ami=${AMI}"'
