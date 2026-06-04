@@ -35,7 +35,14 @@ pipeline {
                 sh 'ls -l'
                 sh 'terraform fmt'
                 sh 'terraform init'
-            //    sh 'terraform apply -auto-approve -var "region=$REGION,access_key=$ACCESS_KEY,secret_key=$SECRET_KEY,instance_type=$INSTANCE_TYPE,ami=$AMI"'
+                sh '''
+                    terraform apply -auto-approve \
+                    -var="region=$REGION" \
+                    -var="access_key=$ACCESS_KEY" \
+                    -var="secret_key=$SECRET_KEY" \
+                    -var="instance_type=$INSTANCE_TYPE" \
+                    -var="ami=$AMI"
+                '''
                 }
                 
             }
