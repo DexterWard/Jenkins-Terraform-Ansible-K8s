@@ -20,6 +20,7 @@ pipeline {
                 AMI = credentials('AMI')
             }
             steps {
+                sh 'pwd'
                 sh 'cd Jenkins-Terraform-Ansible-K8s/Terraform'
                 sh 'terraform fmt'
                 sh 'terraform init'
