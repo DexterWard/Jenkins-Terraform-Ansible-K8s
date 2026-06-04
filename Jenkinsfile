@@ -27,6 +27,10 @@ pipeline {
                     echo "INSTANCE_TYPE=$INSTANCE_TYPE"
                     echo "AMI=$AMI"
                 '''
+                sh '''
+                    [ -n "$ACCESS_KEY" ] && echo "ACCESS_KEY is set"
+                    [ -n "$SECRET_KEY" ] && echo "SECRET_KEY is set"
+                '''
                 dir('/home/jenkins/workspace/Project1/Terraform') {
                 sh 'ls -l'
                 sh 'terraform fmt'
