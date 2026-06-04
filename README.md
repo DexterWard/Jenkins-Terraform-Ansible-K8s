@@ -57,3 +57,9 @@ and check that docker and Jenkins are running with: docker ps
 7) Create a new agent:
   - New node --> Node name --> Permanent agent --> Adjust the number of executors --> Remote root directory: /home/jenkins -- > Launch method: Launch agents via SSH --> Host: IP address of the agent --> Credentials: Select the credentials created in the previous step --> Host Key Verification Strategy: Known hosts file verification strategy
   - Check that the agent is synced and online
+
+8) Create credentials of type "secret text" in the Jenkins web interface so they can be injected as environment variables in the pipeline.
+
+9) Create a pipeline job in Jenkins of time SCM and fill out the gitbhub repository and the github credentials
+
+10) Run the pipeline. It will search for the Jenkinsfile in Github and execute the steps.

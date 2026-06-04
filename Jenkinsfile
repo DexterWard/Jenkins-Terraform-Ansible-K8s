@@ -6,23 +6,21 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-            //    sh 'git clone https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git'
-            //    git branch: main, url:"https://github.com/DexterWard/Jenkins-Terraform-Ansible-K8s.git"
             }
         }
 
         stage('Terraform') {
             environment {
-                REGION = credentials('REGION')
                 ACCESS_KEY = credentials('ACCESS_KEY')
                 SECRET_KEY = credentials('SECRET_KEY')
+                REGION = credentials('REGION')
                 INSTANCE_TYPE = credentials('INSTANCE_TYPE')
                 AMI = credentials('AMI')
                 
             }
             steps {
                 //Check variable values
-                sh '''
+            /*    sh '''
                     echo "REGION=$REGION"
                     echo "INSTANCE_TYPE=$INSTANCE_TYPE"
                     echo "AMI=$AMI"
@@ -30,9 +28,8 @@ pipeline {
                 sh '''
                     [ -n "$ACCESS_KEY" ] && echo "ACCESS_KEY is set"
                     [ -n "$SECRET_KEY" ] && echo "SECRET_KEY is set"
-                '''
+                '''*/
                 dir('/home/jenkins/workspace/Project1/Terraform') {
-                sh 'ls -l'
                 sh 'terraform fmt'
                 sh 'terraform init'
                 sh '''
