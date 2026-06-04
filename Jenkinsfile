@@ -20,12 +20,13 @@ pipeline {
                 AMI = credentials('AMI')
             }
             steps {
-                sh 'pwd'
-            //    sh 'cd Terraform'
+                dir('/home/jenkins/workspace/Project1/Terraform') {
                 sh 'ls -l'
                 sh 'terraform fmt'
                 sh 'terraform init'
                 sh 'terraform apply -auto-approve -var "region=${REGION},access_key=${ACCESS_KEY},secret_key=${SECRET_KEY},instance_type=${INSTANCE_TYPE},ami=${AMI}"'
+                }
+                
             }
         }
 
