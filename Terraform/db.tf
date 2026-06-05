@@ -4,6 +4,7 @@ ephemeral "random_password" "db_password" {
 }
 
 resource "aws_db_instance" "db1" {
+  db_name              = "k8s"
   instance_class       = "db.t4g.micro"
   allocated_storage    = "20"
   engine               = "mysql"
