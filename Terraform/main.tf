@@ -13,12 +13,16 @@ provider "aws" {
     secret_key = var.secret_key
 }
 
+locals {
+  ec2-name =  ["master","worker"]
+}
+
 resource "aws_instance" "kubeadm_master" {
     ami = var.ami
     instance_type = var.instance_type
     count = 2
 
     tags = {
-      Name = "kubeadm-${var.ec2-name[count.index]}"
+      Name = "kubeadm-${local.ec2-name[count.index]}"
     }
 }
