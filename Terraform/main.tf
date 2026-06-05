@@ -17,7 +17,7 @@ locals {
   ec2-name =  ["master","worker"]
 }
 
-resource "aws_instance" "kubeadm_master" {
+resource "aws_instance" "kubeadm" {
     ami = var.ami
     instance_type = var.instance_type
     count = 2
