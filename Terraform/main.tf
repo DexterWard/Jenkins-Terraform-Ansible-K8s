@@ -40,6 +40,19 @@ resource "aws_instance" "kubeadm" {
               pipx install --include-deps ansible
               pipx ensurepath
               cat Ansible/hosts.ini > /home/ubuntu/hosts.ini
+
+              cat <<EOF > hosts.ini
+                [master]
+                172.31.45.240 ansible_python_interpreter='python3'
+
+                [node]
+                172.31.45.241 ansible_python_interpreter='python3'
+
+                [kube-cluster:children]
+                master
+                node
+
+              EOF
               EOF
 
  /*   connection {
