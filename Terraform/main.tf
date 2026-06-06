@@ -17,7 +17,7 @@ resource "aws_security_group" "k8s" {
   name        = "k8s-sg"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "example" {
+resource "aws_vpc_security_group_ingress_rule" "ssh" {
   security_group_id = aws_security_group.k8s.id
   cidr_ipv4   = "88.203.36.145/32"
   from_port   = 22
