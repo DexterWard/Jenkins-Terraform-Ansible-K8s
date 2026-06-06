@@ -49,9 +49,7 @@ resource "aws_instance" "kubeadm" {
               sudo hostnamectl set-hostname kubeadm-${local.ec2-name[count.index]};
               sudo timedatectl set-timezone Europe/Amsterdam;
               sudo apt update;
-              sudo apt install -y python3 pipx;
-              pipx install --include-deps ansible;
-              pipx ensurepath;
+              sudo apt install -y python3
               EOF
 
  /*   connection {
