@@ -22,6 +22,7 @@ apt install -y python3 pipx
 
 #Install Ansible
 pipx install --include-deps ansible
+pipx install ansible-core
 
 
 #Create the Jenkins user

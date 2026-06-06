@@ -14,7 +14,7 @@ resource "aws_db_instance" "db1" {
   password_wo          = ephemeral.random_password.db_password.result
   password_wo_version  = 1
 }
-
+/*
 resource "aws_secretsmanager_secret" "db_password" {
   name = "db_pass"
 }
@@ -28,4 +28,4 @@ resource "aws_secretsmanager_secret_version" "db_password" {
 ephemeral "aws_secretsmanager_secret_version" "db_password" {
   secret_id = aws_secretsmanager_secret_version.db_password.secret_id
   
-}
+}*/
