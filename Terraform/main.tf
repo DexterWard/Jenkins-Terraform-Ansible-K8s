@@ -21,7 +21,7 @@ resource "aws_instance" "kubeadm" {
     ami = var.ami
     instance_type = var.instance_type
     subnet_id = "subnet-06c46458612776034"
-    private_ip = "172.31.45.24[count.index]"
+    private_ip = "172.31.45.24${[count.index]}"
     count = 2
 
     tags = {
