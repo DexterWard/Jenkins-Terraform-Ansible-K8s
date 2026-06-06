@@ -15,6 +15,7 @@ provider "aws" {
 
 locals {
   ec2-name =  ["master","worker"]
+  last-digit = ["0","1"]
 }
 
 resource "aws_instance" "kubeadm" {
@@ -22,7 +23,7 @@ resource "aws_instance" "kubeadm" {
     instance_type = var.instance_type
     subnet_id = "subnet-06c46458612776034"
     count = 2
-    private_ip = "172.31.45.24${tostring([count.index])}"
+    private_ip = "172.31.45.24${local.last-digit[count.index]}"
     
 
     tags = {
