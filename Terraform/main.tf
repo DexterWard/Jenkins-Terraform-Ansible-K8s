@@ -37,7 +37,7 @@ resource "aws_instance" "kubeadm" {
     vpc_security_group_ids = [aws_security_group.k8s.id]
     count = 2
     private_ip = "172.31.1.${local.last-digit[count.index]}"
-  //    key_name = "Jenkins-Terraform-Ansible-K8s"
+    key_name = "Jenkins-Terraform-Ansible-K8s"
     
 
     tags = {
