@@ -3,3 +3,4 @@ variable ami {}
 variable instance_type {}
 variable access_key {}
 variable secret_key {}
+variable ssh-key {}
