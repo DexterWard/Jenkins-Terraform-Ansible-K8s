@@ -33,12 +33,12 @@ resource "aws_instance" "kubeadm" {
 
     user_data = <<-EOF
               #!/bin/bash
-              sudo hostnamectl set-hostname jenkins-agent
-              sudo timedatectl set-timezone Europe/Amsterdam
-              sudo apt update
-              sudo apt install -y python3 pipx
-              pipx install --include-deps ansible
-              pipx ensurepath
+              sudo hostnamectl set-hostname jenkins-agent;
+              sudo timedatectl set-timezone Europe/Amsterdam;
+              sudo apt update;
+              sudo apt install -y python3 pipx;
+              pipx install --include-deps ansible;
+              pipx ensurepath;
               cat Ansible/hosts.ini > /home/ubuntu/hosts.ini
               EOF
 
