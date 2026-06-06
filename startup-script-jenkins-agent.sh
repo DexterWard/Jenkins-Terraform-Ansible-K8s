@@ -29,3 +29,17 @@ pipx install ansible-core
 useradd -m -s /bin/bash jenkins
 su -u jenkins -c "pipx ensurepath"
 
+#Create hosts.ini
+cat <<EOF > ~/hosts.ini
+[master]
+172.31.1.0 ansible_python_interpreter='python3'
+
+[node]
+172.31.1.1 ansible_python_interpreter='python3'
+
+[kube-cluster:children]
+master
+node
+
+
+EOF
