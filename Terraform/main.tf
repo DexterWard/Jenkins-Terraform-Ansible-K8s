@@ -39,7 +39,6 @@ resource "aws_instance" "kubeadm" {
               sudo apt install -y python3 pipx;
               pipx install --include-deps ansible;
               pipx ensurepath;
-              cat Ansible/hosts.ini > /home/ubuntu/hosts.ini
               EOF
 
  /*   connection {
