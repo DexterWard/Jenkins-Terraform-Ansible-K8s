@@ -13,6 +13,18 @@ provider "aws" {
     secret_key = var.secret_key
 }
 
+resource "aws_security_group" "k8s" {
+  name        = "k8s-sg"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "example" {
+  security_group_id = aws_security_group.k8s.id
+  cidr_ipv4   = "88.203.36.145/32"
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+}
+
 locals {
   ec2-name =  ["master","worker"]
   last-digit = ["0","1"]
@@ -22,6 +34,7 @@ resource "aws_instance" "kubeadm" {
     ami = var.ami
     instance_type = var.instance_type
     subnet_id = "subnet-06c46458612776034"
+    vpc_security_group_ids = [aws_security_group.k8s.id]
     count = 2
     private_ip = "172.31.1.${local.last-digit[count.index]}"
   //    key_name = "Jenkins-Terraform-Ansible-K8s"
