@@ -12,7 +12,7 @@ resource "aws_db_instance" "db1" {
   skip_final_snapshot  = true
   publicly_accessible  = true
   password_wo          = ephemeral.random_password.db_password.result
-  password_wo_version  = 1
+  password_wo_version  = 2
 }
 
 resource "aws_secretsmanager_secret" "db_password" {
