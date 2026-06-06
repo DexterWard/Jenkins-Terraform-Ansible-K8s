@@ -23,8 +23,8 @@ resource "aws_instance" "kubeadm" {
     instance_type = var.instance_type
     subnet_id = "subnet-06c46458612776034"
     count = 2
-    private_ip = "172.31.45.24${local.last-digit[count.index]}"
-    key_name = "Jenkins-Terraform-Ansible-K8s"
+    private_ip = "172.31.1.${local.last-digit[count.index]}"
+  //    key_name = "Jenkins-Terraform-Ansible-K8s"
     
 
     tags = {
@@ -33,7 +33,7 @@ resource "aws_instance" "kubeadm" {
 
     user_data = <<-EOF
               #!/bin/bash
-              sudo hostnamectl set-hostname jenkins-agent;
+              sudo hostnamectl set-hostname kubeadm-${local.ec2-name[count.index]};
               sudo timedatectl set-timezone Europe/Amsterdam;
               sudo apt update;
               sudo apt install -y python3 pipx;
