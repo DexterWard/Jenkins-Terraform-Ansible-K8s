@@ -24,13 +24,15 @@ apt install -y python3 pipx
 pipx install --include-deps ansible
 pipx install ansible-core
 
+#Create the Ansible user
+useradd -m -s /bin/bash ansible
+#su -u ansible -c "pipx ensurepath"
 
-#Create the Jenkins user
-useradd -m -s /bin/bash jenkins
-su -u jenkins -c "pipx ensurepath"
+echo "172.31.1.0 kubeadm-master" >> /etc/hosts
+echo "172.31.1.1 kubeadm-node" >> /etc/hosts
 
 #Create hosts.ini
-cat <<EOF > ~/hosts.ini
+cat <<EOF > /home/ansible/hosts.ini
 [master]
 172.31.1.0 ansible_python_interpreter='python3'
 

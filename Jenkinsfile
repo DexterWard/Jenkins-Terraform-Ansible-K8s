@@ -44,12 +44,22 @@ pipeline {
                 
             }
         }
-
+        /*
         stage('Ansible') {
             steps {
-                sh 'echo "Here we will have the Ansible steps"'
-            }
-        }
+                //Automate ssh communication with Ansible
+                sh 'su - ansible'
+                sh 'ssh-keygen'
+                sh 'cd /home/ansible/.ssh'
+                sh 'ssh-copy-id kubeadm-master'
+                sh 'ssh-copy-id kubeadm-node'
+
+                //Clone the kubeadm-ansible repo and execute the playbook
+                sh 'git clone https://github.com/kairen/kubeadm-ansible.git'
+                sh 'cd kubeadm-ansible'
+                sh 'pipx ensurepath'
+                sh 'ansible-playbook site.yaml'
+        }*/
 
         stage('K8s') {
             steps {

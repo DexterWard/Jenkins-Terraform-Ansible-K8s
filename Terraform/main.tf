@@ -26,7 +26,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
 }
 
 locals {
-  ec2-name =  ["master","worker"]
+  ec2-name =  ["master","node"]
   last-digit = ["0","1"]
 }
 
