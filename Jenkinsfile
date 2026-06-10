@@ -48,7 +48,7 @@ pipeline {
         stage('Ansible') {
             steps {
                 //Automate ssh communication with Ansible
-                sh 'su - ansible'
+                sh 'sudo -u ansible -i'
                 sh 'ssh-keygen'
                 sh 'cd /home/ansible/.ssh'
                 sh 'ssh-copy-id kubeadm-master'

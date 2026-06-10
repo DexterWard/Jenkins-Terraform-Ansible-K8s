@@ -17,7 +17,7 @@ resource "aws_security_group" "k8s" {
   name        = "k8s-sg"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ssh" {
+resource "aws_vpc_security_group_ingress_rule" "ssh_my_ip" {
   security_group_id = aws_security_group.k8s.id
   cidr_ipv4   = "88.203.36.145/32"
   from_port   = 22
@@ -25,9 +25,17 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
   to_port     = 22
 }
 
+resource "aws_vpc_security_group_ingress_rule" "ssh_ansible" {
+  security_group_id = aws_security_group.k8s.id
+  cidr_ipv4   = "172.31.32.0/20"
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+}
+
 locals {
   ec2-name =  ["master","node"]
-  last-digit = ["0","1"]
+  last-digit = ["1","2"]
 }
 
 resource "aws_instance" "kubeadm" {
@@ -46,33 +54,29 @@ resource "aws_instance" "kubeadm" {
 
     user_data = <<-EOF
               #!/bin/bash
-              sudo hostnamectl set-hostname kubeadm-${local.ec2-name[count.index]};
-              sudo timedatectl set-timezone Europe/Amsterdam;
-              sudo apt update;
-              sudo apt install -y python3
+              hostnamectl set-hostname kubeadm-${local.ec2-name[count.index]};
+              timedatectl set-timezone Europe/Amsterdam;
+              apt update;
+              apt install -y python3
+              useradd -m -s /bin/bash ansible
               EOF
 
- /*   connection {
+    connection {
     type = "ssh"
     user = "ubuntu"
     host = self.public_ip
-    private_key = var.ssh-key
-  //  private_key = file("../Jenkins-Terraform-Ansible-K8s.pem")
+  //  private_key = var.ssh-key
+    private_key = file("../Jenkins-Terraform-Ansible-K8s.pem")
+  }
+
+  provisioner "file" {
+    source      = "/home/ansible/.ssh/ansible.pub"
+    destination = "/home/ansible/.ssh/"
   }
 
   provisioner "remote-exec" {
     inline = [ 
-        "sudo hostnamectl set-hostname jenkins-agent",
-        "sudo timedatectl set-timezone Europe/Amsterdam",
-        "sudo apt update",
-        "sudo apt install -y python3 pipx",
-        "pipx install --include-deps ansible",
-        "pipx ensurepath",
+        "sudo cat /home/ansible/.ssh/ansible.pub > /home/ansible/.ssh/authorized_keys",
      ]
-  }*/
-/*
-  provisioner "file" {
-    source      = "Ansible/hosts.ini"
-    destination = "/home/ubuntu/hosts.ini"
-  }*/
+  }
 }

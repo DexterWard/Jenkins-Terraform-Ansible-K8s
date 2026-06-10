@@ -28,16 +28,23 @@ pipx install ansible-core
 useradd -m -s /bin/bash ansible
 #su -u ansible -c "pipx ensurepath"
 
-echo "172.31.1.0 kubeadm-master" >> /etc/hosts
-echo "172.31.1.1 kubeadm-node" >> /etc/hosts
+#Create ansible key-pair
+sudo -u ansible -i
+ssh-keygen -t ed25519 -f /home/ansible/.ssh/ansible -N  ""
+cd /home/ansible/.ssh
 
-#Create hosts.ini
+
+#Add the K8s nodes to /etc/hosts
+echo "172.31.1.1 kubeadm-master" >> /etc/hosts
+echo "172.31.1.2 kubeadm-node" >> /etc/hosts
+
+#Create hosts.ini for Ansible provisioning
 cat <<EOF > /home/ansible/hosts.ini
 [master]
-172.31.1.0 ansible_python_interpreter='python3'
+172.31.1.1 ansible_python_interpreter='python3'
 
 [node]
-172.31.1.1 ansible_python_interpreter='python3'
+172.31.1.2 ansible_python_interpreter='python3'
 
 [kube-cluster:children]
 master
