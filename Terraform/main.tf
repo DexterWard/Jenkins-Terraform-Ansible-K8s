@@ -64,9 +64,9 @@ resource "aws_instance" "kubeadm" {
     connection {
     type = "ssh"
     user = "ubuntu"
-    host = self.public_ip
+    host = self.private_ip
   //  private_key = var.ssh-key
-    private_key = file("../Jenkins-Terraform-Ansible-K8s.pem")
+    private_key = file("/home/jenkins/workspace/Project1/Jenkins-Terraform-Ansible-K8s.pem")
   }
 
   provisioner "file" {
