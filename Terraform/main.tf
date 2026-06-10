@@ -59,6 +59,8 @@ resource "aws_instance" "kubeadm" {
               apt update;
               apt install -y python3
               useradd -m -s /bin/bash ansible
+              mkdir -p /home/ansible/.ssh
+              chown -R ansible:ansible /home/ansible/.ssh
               EOF
 
     connection {
@@ -70,13 +72,14 @@ resource "aws_instance" "kubeadm" {
   }
 
   provisioner "file" {
-    source      = "/home/ansible/.ssh/ansible.pub"
+    source      = "/home/ubuntu/ansible.pub"
     destination = "/home/ubuntu/"
   }
 
   provisioner "remote-exec" {
     inline = [ 
         "sudo mv /home/ubuntu/ansible.pub /home/ansible/.ssh/",
+        "sudo chown ansible:ansible /home/ansible/.ssh/ansible.pub",
         "sudo cat /home/ansible/.ssh/ansible.pub >> /home/ansible/.ssh/authorized_keys",
      ]
   }
