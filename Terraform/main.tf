@@ -71,12 +71,13 @@ resource "aws_instance" "kubeadm" {
 
   provisioner "file" {
     source      = "/home/ansible/.ssh/ansible.pub"
-    destination = "/home/ansible/.ssh/"
+    destination = "/home/ubuntu/"
   }
 
   provisioner "remote-exec" {
     inline = [ 
-        "sudo cat /home/ansible/.ssh/ansible.pub > /home/ansible/.ssh/authorized_keys",
+        "sudo mv /home/ubuntu/ansible.pub /home/ansible/.ssh/",
+        "sudo cat /home/ansible/.ssh/ansible.pub >> /home/ansible/.ssh/authorized_keys",
      ]
   }
 }
