@@ -67,7 +67,7 @@ pipeline {
                 '''
 
                 sh '''
-                    sudo -u ansible /home/ansible/.local/bin/ansible -i ../Ansible/hosts.ini all --private-key "$SSH_KEY" -m ping
+                    sudo -u ansible /home/ansible/.local/bin/ansible -i /home/jenkins/workspace/Project1/Ansible/hosts.ini all --private-key "$SSH_KEY" -m ping
                 '''
 /*
                 sh 'pipx ensurepath'
