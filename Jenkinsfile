@@ -60,6 +60,7 @@ pipeline {
                 sh 'git clone https://github.com/kairen/kubeadm-ansible.git'
                 sh 'cd kubeadm-ansible'
                 sh 'pipx ensurepath'
+                sh 'source /home/ansible/.bashrc'
                 sh 'ansible -i hosts.ini all --private-key $SSH_KEY -m ping'
              //   sh 'ansible-playbook site.yaml'
                     }
