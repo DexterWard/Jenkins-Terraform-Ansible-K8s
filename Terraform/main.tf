@@ -33,6 +33,12 @@ resource "aws_vpc_security_group_ingress_rule" "ssh_ansible" {
   to_port     = 22
 }
 
+resource "aws_vpc_security_group_ingress_rule" "ansible_ping" {
+  security_group_id = aws_security_group.k8s.id
+  cidr_ipv4   = "172.31.32.0/20"
+  ip_protocol = "icmp"
+}
+
 locals {
   ec2-name =  ["master","node"]
   last-digit = ["1","2"]
