@@ -66,11 +66,11 @@ pipeline {
                     fi
                 '''
         
-                withEnv(["ANSIBLE_HOST_KEY_CHECKING=False"]) {
+                
                 sh '''
-                    sudo -u ansible /home/ansible/.local/bin/ansible -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key "$SSH_KEY" -m ping
+                    sudo -u ansible env ANSIBLE_HOST_KEY_CHECKING=False /home/ansible/.local/bin/ansible -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key "$SSH_KEY" -m ping
                 '''
-                }
+                
 /*
                 sh 'pipx ensurepath'
                 sh '. /home/ansible/.bashrc'
