@@ -65,12 +65,9 @@ pipeline {
                         cd kubeadm-ansible
                     fi
                 '''
-
+                
                 sh '''
-                    whoami
-                    which ansible || true
-                    sudo -u ansible which ansible || true
-                    sudo -u ansible pipx list || true
+                    sudo -u ansible /home/ansible/.local/bin/ansible -i hosts.ini all --private-key "$SSH_KEY" -m ping
                 '''
 /*
                 sh 'pipx ensurepath'
