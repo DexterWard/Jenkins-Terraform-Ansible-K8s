@@ -73,7 +73,7 @@ pipeline {
                     sh '''
                         cp "$SSH_KEY" /tmp/ansible_key.pem
                         chmod 644 /tmp/ansible_key.pem
-                        sudo -u ansible-playbook /home/ansible/.local/bin/ansible -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key /tmp/ansible_key.pem site.yaml
+                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key /tmp/ansible_key.pem site.yaml
                     '''
                 }
                     }
@@ -81,7 +81,7 @@ pipeline {
                 sh '''
                     cp "$SSH_KEY" /tmp/ansible_key.pem
                     chmod 644 /tmp/ansible_key.pem
-                    sudo -u ansible-playbook /home/ansible/.local/bin/ansible -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key /tmp/ansible_key.pem site.yaml
+                    sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key /tmp/ansible_key.pem site.yaml
 
                 '''
 */
