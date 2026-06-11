@@ -68,7 +68,7 @@ pipeline {
         
                 sh '''
                     cp "$SSH_KEY" /tmp/ansible_key.pem
-                    chmod 600 /tmp/ansible_key.pem
+                    chmod 644 /tmp/ansible_key.pem
                     sudo -u ansible env ANSIBLE_HOST_KEY_CHECKING=False /home/ansible/.local/bin/ansible -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key /tmp/ansible_key.pem -m ping
                 '''
                 
