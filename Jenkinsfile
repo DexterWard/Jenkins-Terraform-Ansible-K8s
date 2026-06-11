@@ -54,9 +54,8 @@ pipeline {
                         keyFileVariable: 'SSH_KEY'
                     )
                 ]) {
-                //Automate ssh communication with Ansible
-                sh 'sudo -u ansible -i'
-                //Clone the kubeadm-ansible repo and execute the playbook
+  
+                //Clone the kubeadm-ansible repo
                 sh '''
                     if [ -d kubeadm-ansible/.git ]; then
                         cd kubeadm-ansible
@@ -67,11 +66,18 @@ pipeline {
                     fi
                 '''
 
+                sh '''
+                    whoami
+                    which ansible || true
+                    sudo -u ansible which ansible || true
+                    sudo -u ansible pipx list || true
+                '''
+/*
                 sh 'pipx ensurepath'
-                sh 'source /home/ansible/.bashrc'
+                sh '. /home/ansible/.bashrc'
                 sh 'ansible -i hosts.ini all --private-key $SSH_KEY -m ping'
              //   sh 'ansible-playbook site.yaml'
-                    }
+         */          }
             }
         }
 
