@@ -57,8 +57,17 @@ pipeline {
                 //Automate ssh communication with Ansible
                 sh 'sudo -u ansible -i'
                 //Clone the kubeadm-ansible repo and execute the playbook
-                sh 'git clone https://github.com/kairen/kubeadm-ansible.git'
-                sh 'cd kubeadm-ansible'
+                sh '''
+                    if [ -d kubeadm-ansible/.git ]; then
+                        cd kubeadm-ansible
+                        git fetch
+                        git reset --hard origin/main
+                    else
+                        git clone https://github.com/kairen/kubeadm-ansible.git
+                        cd kubeadm-ansible
+                    fi
+                '''
+
                 sh 'pipx ensurepath'
                 sh 'source /home/ansible/.bashrc'
                 sh 'ansible -i hosts.ini all --private-key $SSH_KEY -m ping'
