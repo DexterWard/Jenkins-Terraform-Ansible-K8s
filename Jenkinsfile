@@ -66,19 +66,33 @@ pipeline {
                     fi
                 '''
         
+                withEnv([
+                    "ANSIBLE_CONFIG=${WORKSPACE}/Project1/kubeadm-ansible/ansible.cfg",
+                    "ANSIBLE_HOST_KEY_CHECKING=False"
+                ]) {
+                    sh '''
+                        cp "$SSH_KEY" /tmp/ansible_key.pem
+                        chmod 644 /tmp/ansible_key.pem
+                        sudo -u ansible-playbook /home/ansible/.local/bin/ansible -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key /tmp/ansible_key.pem site.yaml
+                    '''
+                }
+                    }
+/*
                 sh '''
                     cp "$SSH_KEY" /tmp/ansible_key.pem
                     chmod 644 /tmp/ansible_key.pem
-                    sudo -u ansible-playbook env ANSIBLE_HOST_KEY_CHECKING=False /home/ansible/.local/bin/ansible -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key /tmp/ansible_key.pem site.yaml
+                    sudo -u ansible-playbook /home/ansible/.local/bin/ansible -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key /tmp/ansible_key.pem site.yaml
 
                 '''
+*/
                 
 /*
              //    sudo -u ansible env ANSIBLE_HOST_KEY_CHECKING=False /home/ansible/.local/bin/ansible -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key /tmp/ansible_key.pem -m ping  
              // sh 'ansible-playbook site.yaml'
- */          }
+ */         
             }
         }
+        
 
         stage('K8s') {
             steps {
