@@ -65,10 +65,7 @@ pipeline {
                         cd kubeadm-ansible
                     fi
                 '''
-                sh '''
-                    ssh-keygen -f /home/ansible/.ssh/known_hosts -R 172.31.1.1 || true
-                    ssh-keygen -f /home/ansible/.ssh/known_hosts -R 172.31.1.2 || true'
-                '''
+        
                 withEnv(["ANSIBLE_HOST_KEY_CHECKING=False"]) {
                 sh '''
                     sudo -u ansible /home/ansible/.local/bin/ansible -i /home/jenkins/workspace/Project1/Ansible/hosts.ini kube_cluster --private-key "$SSH_KEY" -m ping
