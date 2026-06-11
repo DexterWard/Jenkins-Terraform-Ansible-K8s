@@ -61,7 +61,6 @@ pipeline {
                     if [ -d kubeadm-ansible/.git ]; then
                         cd kubeadm-ansible
                         git fetch
-                        git reset --hard origin/main
                     else
                         git clone https://github.com/kairen/kubeadm-ansible.git
                         cd kubeadm-ansible
