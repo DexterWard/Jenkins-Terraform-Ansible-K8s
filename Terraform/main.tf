@@ -37,6 +37,8 @@ resource "aws_vpc_security_group_ingress_rule" "ansible_ping" {
   security_group_id = aws_security_group.k8s.id
   cidr_ipv4   = "172.31.32.0/20"
   ip_protocol = "icmp"
+  from_port = -1
+  to_port = -1
 }
 
 locals {
