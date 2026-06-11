@@ -52,18 +52,12 @@ resource "aws_instance" "kubeadm" {
       Name = "kubeadm-${local.ec2-name[count.index]}"
     }
 
-    user_data = <<-EOF
-              #!/bin/bash
-              hostnamectl set-hostname kubeadm-${local.ec2-name[count.index]};
-              timedatectl set-timezone Europe/Amsterdam;
-              apt update;
-              apt install -y python3
-              useradd -m -s /bin/bash ansible
-              mkdir -p /home/ansible/.ssh
-              chown -R ansible:ansible /home/ansible/.ssh
-              EOF
+    user_data = templatefile("${path.module}/userdata.sh", {
+    ansible_pubkey = file("${path.module}/ansible.pub")
+    })
 
-    connection {
+
+ /*   connection {
     type = "ssh"
     user = "ubuntu"
     host = self.private_ip
@@ -82,5 +76,5 @@ resource "aws_instance" "kubeadm" {
         "sudo chown ansible:ansible /home/ansible/.ssh/ansible.pub",
         "sudo cat /home/ansible/.ssh/ansible.pub >> /home/ansible/.ssh/authorized_keys",
      ]
-  }
+  }*/
 }

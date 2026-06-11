@@ -18,20 +18,15 @@ apt update
 apt install -y terraform
 
 #Install Python
-apt install -y python3 pipx 
-
-#Install Ansible
-pipx install --include-deps ansible
-pipx install ansible-core
+apt install -y python3 pipx
 
 #Create the Ansible user
 useradd -m -s /bin/bash ansible
 #su -u ansible -c "pipx ensurepath"
 
-#Create ansible key-pair
-sudo -u ansible -i
-ssh-keygen -t ed25519 -f /home/ansible/.ssh/ansible -N  ""
-cd /home/ansible/.ssh
+#Install Ansible
+su -u ansible -c "pipx install --include-deps ansible"
+su -u ansible -c "pipx install ansible-core"
 
 
 #Add the K8s nodes to /etc/hosts

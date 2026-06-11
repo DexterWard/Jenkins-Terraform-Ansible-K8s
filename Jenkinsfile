@@ -44,22 +44,27 @@ pipeline {
                 
             }
         }
-        /*
+        
         stage('Ansible') {
             steps {
+
+                withCredentials([
+                    sshUserPrivateKey(
+                        credentialsId: 'ansible-private-key',
+                        keyFileVariable: 'SSH_KEY'
+                    )
+                ]) {
                 //Automate ssh communication with Ansible
                 sh 'sudo -u ansible -i'
-                sh 'ssh-keygen'
-                sh 'cd /home/ansible/.ssh'
-                sh 'ssh-copy-id kubeadm-master'
-                sh 'ssh-copy-id kubeadm-node'
-
                 //Clone the kubeadm-ansible repo and execute the playbook
                 sh 'git clone https://github.com/kairen/kubeadm-ansible.git'
                 sh 'cd kubeadm-ansible'
                 sh 'pipx ensurepath'
-                sh 'ansible-playbook site.yaml'
-        }*/
+                sh 'ansible -i hosts.ini all --private-key $SSH_KEY -m ping'
+             //   sh 'ansible-playbook site.yaml'
+                    }
+            }
+        }
 
         stage('K8s') {
             steps {
