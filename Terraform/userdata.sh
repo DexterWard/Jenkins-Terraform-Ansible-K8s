@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #hostnamectl set-hostname kubeadm-${local.ec2-name[count.index]};
 timedatectl set-timezone Europe/Amsterdam              
 
