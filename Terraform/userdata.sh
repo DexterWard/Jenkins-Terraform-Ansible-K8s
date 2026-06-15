@@ -2,7 +2,7 @@
 
 timedatectl set-timezone Europe/Amsterdam              
 
-apt update;
+apt update
 apt install -y python3
 
 useradd -m -s /bin/bash ansible
