@@ -1,3 +1,4 @@
+/*
 ephemeral "random_password" "db_password" {
   length           = 8
   override_special = "!#$%&*()-_=+[]{}<>:?"
@@ -13,7 +14,7 @@ resource "aws_db_instance" "db1" {
   publicly_accessible  = true
   password_wo          = ephemeral.random_password.db_password.result
   password_wo_version  = 1
-}
+}*/
 /*
 resource "aws_secretsmanager_secret" "db_password" {
   name = "db_pass"
