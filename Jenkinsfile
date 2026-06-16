@@ -73,6 +73,8 @@ pipeline {
                     sh '''
                         cp "$SSH_KEY" /tmp/ansible_key.pem
                         chmod 644 /tmp/ansible_key.pem
+                        ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '172.31.1.1'
+                        ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '172.31.1.2'
                         sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/kubeadm-ansible/site.yaml
                     '''
                 }
