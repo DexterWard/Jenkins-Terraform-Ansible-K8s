@@ -41,6 +41,22 @@ resource "aws_vpc_security_group_ingress_rule" "ansible_ping" {
   to_port = -1
 }
 
+resource "aws_vpc_security_group_ingress_rule" "k8s_api" {
+  security_group_id = aws_security_group.k8s.id
+  cidr_ipv4   = "172.31.32.0/20"
+  ip_protocol = "tcp"
+  from_port = 6443
+  to_port = 6443
+}
+
+resource "aws_vpc_security_group_ingress_rule" "k8s_kubelet" {
+  security_group_id = aws_security_group.k8s.id
+  cidr_ipv4   = "172.31.32.0/20"
+  ip_protocol = "tcp"
+  from_port = 10250
+  to_port = 10250
+}
+
 resource "aws_vpc_security_group_egress_rule" "egress" {
     security_group_id = aws_security_group.k8s.id
     from_port   = 0
