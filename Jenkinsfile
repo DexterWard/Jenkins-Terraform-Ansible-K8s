@@ -56,7 +56,7 @@ pipeline {
                 ]) {
   
                 //Clone the kubeadm-ansible repo
-                sh '''
+            /*    sh '''
                     if [ -d kubeadm-ansible/.git ]; then
                         cd kubeadm-ansible
                         git fetch
@@ -64,7 +64,7 @@ pipeline {
                         git clone https://github.com/kairen/kubeadm-ansible.git
                         cd kubeadm-ansible
                     fi
-                '''
+                '''*/
         
                 withEnv([
                     "ANSIBLE_CONFIG=${WORKSPACE}/Project1/kubeadm-ansible/ansible.cfg",
@@ -77,9 +77,9 @@ pipeline {
                         sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '172.31.1.2' || true
                         sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.1 >> /home/ansible/.ssh/known_hosts"
                         sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.2 >> /home/ansible/.ssh/known_hosts"
-                        sudo -u ansible /home/ansible/.local/bin/ansible-config dump | grep HOST_KEY_CHECKING
-                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/kubeadm-ansible/site.yaml
+                        
                     '''
+                    //sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/kubeadm-ansible/site.yaml
                 }
                     }
                        
