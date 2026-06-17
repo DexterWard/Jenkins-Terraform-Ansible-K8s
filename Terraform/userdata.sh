@@ -43,7 +43,7 @@ EOF
 
 sysctl --system
 
-apt-get install -y containerd
+apt install -y containerd
 mkdir -p /etc/containerd
 containerd config default > /etc/containerd/config.toml
 sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
@@ -58,15 +58,15 @@ EOF
 sysctl --system
 
 #Configuring repo and installation
-apt-get update
-apt-get install -y apt-transport-https ca-certificates curl gpg
+apt update
+apt install -y apt-transport-https ca-certificates curl gpg
 
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
-sudo apt-get update
+apt update
 apt-cache madison kubeadm
-apt-get install -y kubelet=1.32.0-1.1 kubeadm=1.32.0-1.1 kubectl=1.32.0-1.1 cri-tools=1.32.0-1.1
-sudo apt-mark hold kubelet kubeadm kubectl
+apt install -y kubelet=1.32.0-1.1 kubeadm=1.32.0-1.1 kubectl=1.32.0-1.1 cri-tools=1.32.0-1.1
+apt-mark hold kubelet kubeadm kubectl
 systemctl enable --now kubelet
