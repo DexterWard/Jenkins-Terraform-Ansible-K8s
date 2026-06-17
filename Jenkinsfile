@@ -75,6 +75,7 @@ pipeline {
                         chmod 644 /tmp/ansible_key.pem
                         sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '172.31.1.1' || true
                         sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '172.31.1.2' || true
+                        sleep 30
                         sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.1 >> /home/ansible/.ssh/known_hosts"
                         sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.2 >> /home/ansible/.ssh/known_hosts"
                         
