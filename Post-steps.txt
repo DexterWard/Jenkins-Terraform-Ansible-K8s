@@ -25,6 +25,17 @@ chmod +x /tmp/join.sh
 /tmp/join.sh | bash
 
 
+Ansible master
+1) Execute kubeadm init
+2) Create a directory
+3) Copy a file locally
+4) Change permissions
+5) Execute kubectl
+6) Create a file with content
+7) Copy a file to another machine
 
-
+Ansible worker
+1) Execute a command
+2) Change permissions
+3) Execute a script
 
