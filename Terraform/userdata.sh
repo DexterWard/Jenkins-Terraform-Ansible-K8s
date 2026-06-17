@@ -43,6 +43,8 @@ EOF
 
 sysctl --system
 
+apt update
+
 apt install -y containerd
 mkdir -p /etc/containerd
 containerd config default > /etc/containerd/config.toml
