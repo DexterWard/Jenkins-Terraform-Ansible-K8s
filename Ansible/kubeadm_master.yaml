@@ -5,7 +5,7 @@
   tasks:
 
    - name: Create kubeadm cluster
-      shell: | 
+      ansible.builtin.shell: | 
        kubeadm init --pod-network-cidr=192.168.0.0/16 --kubernetes-version=1.32.0
 
    - name: Create kube directory
