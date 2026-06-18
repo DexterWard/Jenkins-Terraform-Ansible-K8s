@@ -30,7 +30,11 @@
 
    - name: Untaint control plane node
      ansible.builtin.shell: |
-       kubectl --kubeconfig=/home/ansible/.kube/config taint nodes --all node-role.kubernetes.io/control-plane- 
+       kubectl --kubeconfig=/home/ansible/.kube/config taint nodes --all node-role.kubernetes.io/control-plane-
+     register: untaint_result
+     failed_when:
+      - untaint_result.rc != 0
+      - "'not found' not in untaint_result.stderr"
 
    - name: Install calico
      ansible.builtin.shell: |
