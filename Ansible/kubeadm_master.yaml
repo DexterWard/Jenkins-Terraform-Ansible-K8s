@@ -4,6 +4,9 @@
 
   tasks:
 
+   - name: Set hostname
+     ansible.builtin.shell: sudo hostnamectl set-hostname kubeadm-master
+   
    - name: Create kubeadm cluster
      ansible.builtin.shell: | 
        kubeadm init --pod-network-cidr=192.168.0.0/16 --kubernetes-version=1.32.0
@@ -27,7 +30,7 @@
 
    - name: Untaint control plane node
      ansible.builtin.shell: |
-       kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+       kubectl taint nodes --all node-role.kubernetes.io/control-plane- 
 
    - name: Install calico
      ansible.builtin.shell: |
