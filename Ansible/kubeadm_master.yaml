@@ -46,10 +46,10 @@
 
    - name: Print join command
      ansible.builtin.shell: |
-      kubeadm token create --print-join-command > /tmp/join.txt
+      kubeadm token create --print-join-command > /tmp/join.sh
 
    - name: Fetch file
      ansible.builtin.fetch:
-      src: /tmp/join.txt
-      dest: /tmp/join.txt
+      src: /tmp/join.sh
+      dest: /tmp/join.sh
       flat: true

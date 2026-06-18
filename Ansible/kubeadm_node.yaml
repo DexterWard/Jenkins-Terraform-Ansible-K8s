@@ -9,10 +9,9 @@
 
    - name: Copy the join file to kubeadm node
      ansible.builtin.copy:
-       src: /tmp/join.txt
-       dest: /tmp/join.txt
-       mode: 755
-       register: result
+      src: /tmp/join.sh
+      dest: /tmp/join.sh
+      mode: 755
 
    - name: Join the cluster
-     ansible.builtin.shell: "{{result}}"
+     ansible.builtin.shell: bash /tmp/join.sh
