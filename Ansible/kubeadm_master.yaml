@@ -21,6 +21,7 @@
         src: /etc/kubernetes/admin.conf
         dest: /home/ansible/.kube/config
         mode: '0744'
+        remote_src: yes
 
    - name: Untaint control plane node
      ansible.builtin.shell: |
