@@ -14,5 +14,5 @@
        mode: 755
        register: result
 
-   - name: Joing the cluster
+   - name: Join the cluster
      ansible.builtin.shell: "{{result}}"
