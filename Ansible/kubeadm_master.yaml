@@ -5,7 +5,8 @@
   tasks:
 
    - name: Create kubeadm cluster
-      shell: kubeadm init --pod-network-cidr=192.168.0.0/16 --kubernetes-version=1.32.0
+      shell: | 
+       kubeadm init --pod-network-cidr=192.168.0.0/16 --kubernetes-version=1.32.0
 
    - name: Create kube directory
       file:
@@ -22,13 +23,16 @@
         mode: '0744'
 
    - name: Untaint control plane node
-      ansible.builtin.shell: kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+      ansible.builtin.shell: |
+       kubectl taint nodes --all node-role.kubernetes.io/control-plane-
      
    - name: Install calico
-      ansible.builtin.shell: kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/tigera-operator.yaml &&
+      ansible.builtin.shell: |
+       kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/tigera-operator.yaml &&
                              kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/custom-resources.yaml
    - name: Print join command
-      ansible.builtin.shell: kubeadm token create --print-join-command > /tmp/join.txt
+      ansible.builtin.shell: |
+       kubeadm token create --print-join-command > /tmp/join.txt
 
    - name: Fetch file
       ansible.builtin.fetch:
