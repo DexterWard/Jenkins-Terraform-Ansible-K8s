@@ -59,8 +59,6 @@ resource "aws_vpc_security_group_ingress_rule" "k8s_kubelet" {
 
 resource "aws_vpc_security_group_egress_rule" "egress" {
     security_group_id = aws_security_group.k8s.id
-    from_port   = 0
-    to_port     = 0
     ip_protocol    = "-1"
     cidr_ipv4 = "0.0.0.0/0"
 }
