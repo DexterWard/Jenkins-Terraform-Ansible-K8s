@@ -18,7 +18,7 @@
         path: /home/ansible/.kube
         owner: ansible
         group: ansible
-        mode: 755
+        mode: '0755'
         recurse: yes
 
    - name: Copy config file
