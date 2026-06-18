@@ -48,3 +48,4 @@ terraform.rc
 
 #Ignore the steps
 Steps.txt
+Post-steps.txt
