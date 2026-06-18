@@ -6,27 +6,27 @@
 
    - name: Set hostname
      ansible.builtin.shell: sudo hostnamectl set-hostname kubeadm-master
-   
+
    - name: Create kubeadm cluster
      ansible.builtin.shell: | 
-       kubeadm init --pod-network-cidr=192.168.0.0/16 --kubernetes-version=1.32.0
+      kubeadm init --pod-network-cidr=192.168.0.0/16 --kubernetes-version=1.32.0
      args:
       creates: /etc/kubernetes/admin.conf
 
    - name: Create kube directory
-     file:
-        path: /home/ansible/.kube
-        owner: ansible
-        group: ansible
-        mode: '0755'
-        recurse: yes
+     ansible.builtin.file:
+      path: /home/ansible/.kube
+      owner: ansible
+      group: ansible
+      mode: '0755'
+      recurse: true
 
    - name: Copy config file
      ansible.builtin.copy:
       src: /etc/kubernetes/admin.conf
       dest: /home/ansible/.kube/config
       mode: '0744'
-      remote_src: yes
+      remote_src: true
 
    - name: Untaint control plane node
      ansible.builtin.shell: |
@@ -38,8 +38,11 @@
 
    - name: Install calico
      ansible.builtin.shell: |
-      kubectl --kubeconfig=/home/ansible/.kube/config create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/tigera-operator.yaml &&
       kubectl --kubeconfig=/home/ansible/.kube/config create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/custom-resources.yaml
+
+   - name: Install tigera operator
+     ansible.builtin.shell: |      
+      kubectl --kubeconfig=/home/ansible/.kube/config create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/tigera-operator.yaml
 
    - name: Print join command
      ansible.builtin.shell: |
