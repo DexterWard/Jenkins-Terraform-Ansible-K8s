@@ -66,10 +66,10 @@ pipeline {
                     fi
                 '''*/
         
-                withEnv([
+              /*  withEnv([
                     "ANSIBLE_CONFIG=${WORKSPACE}/Project1/kubeadm-ansible/ansible.cfg",
                     "ANSIBLE_HOST_KEY_CHECKING=False"
-                ]) {
+                ]) {*/
                     sh '''
                         cp "$SSH_KEY" /tmp/ansible_key.pem
                         chmod 644 /tmp/ansible_key.pem
@@ -82,7 +82,13 @@ pipeline {
                     '''
                     //sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/kubeadm-ansible/site.yaml
                     //sudo -u ansible /home/ansible/.local/bin/ansible -i hosts.ini --private-key /tmp/ansible_key.pem all -m ping
-                }
+                //}
+
+                    sh '''
+                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/kubeadm-ansible/kubeadm_master.yaml
+                        sleep 20
+                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/kubeadm-ansible/kubeadm_node.yaml
+                    '''
                     }
                        
             }
