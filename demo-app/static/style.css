@@ -1,0 +1,24 @@
+body {
+    background: #f5f7fa;
+}
+
+.hero {
+    background: linear-gradient(
+        135deg,
+        #0d6efd,
+        #6610f2
+    );
+
+    color: white;
+    padding: 120px 20px;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    font-weight: bold;
+}
+
+.card {
+    border: none;
+    border-radius: 16px;
+}

@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #Set hostname and time and date
-sudo hostnamectl set-hostname jenkins-agent
+hostnamectl set-hostname jenkins-agent
 timedatectl set-timezone Europe/Amsterdam
 
 #Install dependencies
-sudo apt-get update && sudo apt-get install -y gnupg software-properties-common openjdk-21-jdk
+apt-get update && sudo apt-get install -y gnupg software-properties-common openjdk-21-jdk
 
 #Install Terraform
 wget -O- https://apt.releases.hashicorp.com/gpg | \
