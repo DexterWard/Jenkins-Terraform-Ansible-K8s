@@ -7,6 +7,15 @@ timedatectl set-timezone Europe/Amsterdam
 #Install dependencies
 apt-get update && sudo apt-get install -y gnupg software-properties-common openjdk-21-jdk
 
+#Install Docker to build images
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh ./get-docker.sh
+
+#Add groups, users and ownership
+groupadd docker
+useradd -m -s /bin/bash jenkins
+usermod -aG docker jenkins
+
 #Install Terraform
 wget -O- https://apt.releases.hashicorp.com/gpg | \
 gpg --dearmor | \

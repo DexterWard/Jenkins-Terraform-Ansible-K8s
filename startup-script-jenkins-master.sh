@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Set hostname and time and date
-hostnamectl set-hostname jenkins-master
+sudo hostnamectl set-hostname jenkins-master
 timedatectl set-timezone Europe/Amsterdam
 
 #Install Docker
