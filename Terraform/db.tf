@@ -8,7 +8,7 @@ resource "aws_db_instance" "db1" {
   db_name              = "k8s"
   instance_class       = "db.t4g.micro"
   allocated_storage    = "20"
-  engine               = "mysql"
+  engine               = "postgresql"
   username             = "admin"
   skip_final_snapshot  = true
   publicly_accessible  = true
