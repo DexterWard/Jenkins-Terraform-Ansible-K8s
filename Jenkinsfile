@@ -30,7 +30,9 @@ pipeline {
                     [ -n "$SECRET_KEY" ] && echo "SECRET_KEY is set"
                 '''*/
                 dir('/home/jenkins/workspace/Project1/Terraform') {
+                sh 'echo "Linting Terraform code..."'
                 sh 'terraform fmt'
+                sh 'echo "Intialize Terraform plugins and providers..."'
                 sh 'terraform init'
                 sh '''
                     terraform apply -auto-approve \
@@ -71,6 +73,7 @@ pipeline {
                     "ANSIBLE_HOST_KEY_CHECKING=False"
                 ]) {*/
                     sh '''
+                        echo 'Copying the ssh key to execute the playbooks...'
                         cp "$SSH_KEY" /tmp/ansible_key.pem
                         chmod 644 /tmp/ansible_key.pem
                         sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '172.31.1.1' || true
@@ -78,16 +81,18 @@ pipeline {
                         sleep 10
                         sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.1 >> /home/ansible/.ssh/known_hosts"
                         sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.2 >> /home/ansible/.ssh/known_hosts"
-                        
+                        sleep 20
                     '''
-                    //sleep 20
+
                     //sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/kubeadm-ansible/site.yaml
                     //sudo -u ansible /home/ansible/.local/bin/ansible -i hosts.ini --private-key /tmp/ansible_key.pem all -m ping
                 //}
 
                     sh '''
+                        echo 'Execute the Ansible playbooks in the master node...'
                         sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/kubeadm_master.yaml
                         sleep 10
+                        echo 'Execute the Ansible playbooks in the worker node...'
                         sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/kubeadm_node.yaml
                     '''
                     }
@@ -98,7 +103,7 @@ pipeline {
 
         stage('K8s') {
             steps {
-                sh 'echo "Here we will have the Kubernetes steps"'
+                sh 'echo "Here we will have the Kubernetes steps..."'
             }
         }
     }
