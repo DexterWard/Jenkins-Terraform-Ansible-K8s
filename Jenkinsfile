@@ -80,6 +80,7 @@ pipeline {
                         sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.2 >> /home/ansible/.ssh/known_hosts"
                         
                     '''
+                    //sleep 20
                     //sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/kubeadm-ansible/site.yaml
                     //sudo -u ansible /home/ansible/.local/bin/ansible -i hosts.ini --private-key /tmp/ansible_key.pem all -m ping
                 //}
