@@ -109,3 +109,12 @@ resource "aws_instance" "kubeadm" {
      ]
   }*/
 }
+
+resource "aws_ecr_repository" "ecr" {
+  name                 = "my-project"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}

@@ -100,6 +100,21 @@ pipeline {
             }
         }
         
+        stage('Build') {
+            environment {
+                REGION = credentials('REGION')
+                ACCOUNT_ID = credentials('ACCOUNT_ID')
+            }
+
+            steps {
+                sh '''
+                echo "Logging into AWS ECR..."
+                aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project   
+                docker tag demo-app:${BUILD_NUMBER} $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}
+                docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}   
+                '''
+            }
+        }
 
         stage('K8s') {
             steps {
