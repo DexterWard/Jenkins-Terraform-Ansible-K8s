@@ -118,6 +118,7 @@ pipeline {
 
                 echo "Logging into AWS ECR..."
                 aws ecr get-login-password --region $REGION --profile $PROFILE | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
+                echo "Build, tag and push image..."
                 docker build -t demo-app:${BUILD_NUMBER} demo-app/  
                 docker tag demo-app:${BUILD_NUMBER} $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}
                 docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}   
