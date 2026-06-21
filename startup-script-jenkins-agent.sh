@@ -5,7 +5,7 @@ hostnamectl set-hostname jenkins-agent
 timedatectl set-timezone Europe/Amsterdam
 
 #Install dependencies
-apt-get update && sudo apt-get install -y gnupg software-properties-common openjdk-21-jdk
+apt-get update && apt-get install -y gnupg software-properties-common openjdk-21-jdk unzip
 
 #Install Docker to build images
 curl -fsSL https://get.docker.com -o get-docker.sh
@@ -15,6 +15,12 @@ sh ./get-docker.sh
 groupadd docker
 useradd -m -s /bin/bash jenkins
 usermod -aG docker jenkins
+
+#Install aws cli
+apt install
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
 
 #Install Terraform
 wget -O- https://apt.releases.hashicorp.com/gpg | \
