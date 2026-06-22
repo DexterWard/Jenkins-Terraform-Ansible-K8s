@@ -7,9 +7,15 @@
    - name: Install cert-manager
      ansible.builtin.shell: kubectl --kubeconfig=/home/ansible/.kube/config apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.18.2/cert-manager.yaml
 
-   - name: Create Service Account
+   - name: Create service account
      ansible.builtin.shell: |
-      kubectl --kubeconfig=/home/ansible/.kube/config create sa aws-load-balancer-controller -n kube-system
+      cat <<EOF | kubectl --kubeconfig=/home/ansible/.kube/config apply -f -
+      apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: aws-load-balancer-controller
+        namespace: kube-system
+      EOF
 
    - name: Install load balancer controller
      environment:
