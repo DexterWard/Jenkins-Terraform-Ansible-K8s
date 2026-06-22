@@ -5,11 +5,11 @@
   tasks:
 
    - name: Install cert-manager
-     ansible.builtin.shell: kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.18.2/cert-manager.yaml
+     ansible.builtin.shell: kubectl --kubeconfig=/home/ansible/.kube/config apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.18.2/cert-manager.yaml
 
    - name: Create Service Account
      ansible.builtin.shell: |
-      kubectl create sa aws-load-balancer-controller -n kube-system
+      kubectl --kubeconfig=/home/ansible/.kube/config create sa aws-load-balancer-controller -n kube-system
 
    - name: Install load balancer controller
      ansible.builtin.shell: |
@@ -22,4 +22,3 @@
       --set serviceAccount.name=aws-load-balancer-controller \
       --set region=eu-central-1 \
       --set vpcId=vpc-0739d4f10e95422d4
-      
