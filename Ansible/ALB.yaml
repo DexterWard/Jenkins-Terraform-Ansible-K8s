@@ -12,6 +12,8 @@
       kubectl --kubeconfig=/home/ansible/.kube/config create sa aws-load-balancer-controller -n kube-system
 
    - name: Install load balancer controller
+     environment:
+      KUBECONFIG: /home/ansible/.kube/config
      ansible.builtin.shell: |
       helm repo add eks https://aws.github.io/eks-charts
       helm repo update
