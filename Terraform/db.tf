@@ -9,7 +9,7 @@ resource "aws_db_instance" "db1" {
   instance_class       = "db.t4g.micro"
   allocated_storage    = "20"
   engine               = "postgresql"
-  username             = "admin"
+  username             = "postgres"
   skip_final_snapshot  = true
   publicly_accessible  = true
   password_wo          = ephemeral.random_password.db_password.result

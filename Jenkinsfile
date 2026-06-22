@@ -118,9 +118,8 @@ pipeline {
                 echo "Logging into AWS ECR..."
                 aws ecr get-login-password --region $REGION --profile terraform | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
                 echo "Build, tag and push image..."
-                docker build -t demo-app:${BUILD_NUMBER} demo-app/  
-                docker tag demo-app:${BUILD_NUMBER} $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}
-                docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}   
+                docker build -t demo-app:${BUILD_NUMBER} -t demo-app:latest demo-app/  
+                docker push --all-tags $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
                 '''
             }
         }
@@ -128,10 +127,10 @@ pipeline {
         stage('K8s') {
             steps {
                 sh '''
-                echo "Installing cert-manager..."
+                echo "Installing Kubernetes objects..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/ALB.yaml
-                
-
+                echo "Deploying app"
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/k8s.yaml
                 '''
             }
         }
@@ -141,6 +140,7 @@ pipeline {
         failure {
             echo 'Something went wrong, reverting changes...'
             //sh 'kubectl rollout undo deployment/myapp'
+            //docker tag demo-app:${BUILD_NUMBER} $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}
         }
     }
 }
