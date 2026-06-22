@@ -127,7 +127,12 @@ pipeline {
 
         stage('K8s') {
             steps {
-                sh 'echo "Here we will have the Kubernetes steps..."'
+                sh '''
+                echo "Installing cert-manager..."
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/ALB.yaml
+                
+
+                '''
             }
         }
     }
