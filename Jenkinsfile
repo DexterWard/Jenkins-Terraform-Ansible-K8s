@@ -104,7 +104,6 @@ pipeline {
             environment {
                 REGION = credentials('REGION')
                 ACCOUNT_ID = credentials('ACCOUNT_ID')
-                PROFILE = credentials('PROFILE')
                 ACCESS_KEY = credentials('ACCESS_KEY')
                 SECRET_KEY = credentials('SECRET_KEY')
             }
@@ -112,12 +111,12 @@ pipeline {
             steps {
                 sh '''
                 echo "Configure AWS profile"
-                aws configure set profile.jenkins.aws_access_key_id $ACCESS_KEY
-                aws configure set profile.jenkins.aws_secret_access_key $SECRET_KEY
-                aws configure set profile.jenkins.region $REGION
+                aws configure set profile.terraform.aws_access_key_id $ACCESS_KEY
+                aws configure set profile.terraform.aws_secret_access_key $SECRET_KEY
+                aws configure set profile.terraform.region $REGION
 
                 echo "Logging into AWS ECR..."
-                aws ecr get-login-password --region $REGION --profile $PROFILE | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
+                aws ecr get-login-password --region $REGION --profile terraform | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
                 echo "Build, tag and push image..."
                 docker build -t demo-app:${BUILD_NUMBER} demo-app/  
                 docker tag demo-app:${BUILD_NUMBER} $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}

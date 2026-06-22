@@ -63,6 +63,22 @@ resource "aws_vpc_security_group_egress_rule" "egress" {
   cidr_ipv4         = "0.0.0.0/0"
 }
 
+resource "aws_iam_policy" "ALB_policy" {
+  name        = "alb_policy"
+  path        = "/"
+  description = "ALB policy"
+  policy = file("${path.module}/../AWS/aws-load-balancer-controller-policy.json")
+}
+
+resource "aws_iam_role" "kubeadm_role" {
+  name               = "kubeadm-role"
+  assume_role_policy = aws_iam_policy.ALB_policy.id
+}
+
+resource "aws_iam_role_policy_attachment" "test-attach" {
+  role       = aws_iam_role.kubeadm_role.name
+  policy_arn = aws_iam_policy.ALB_policy.arn
+}
 
 locals {
   ec2-name   = ["master", "node"]
@@ -77,6 +93,7 @@ resource "aws_instance" "kubeadm" {
   count                  = 2
   private_ip             = "172.31.1.${local.last-digit[count.index]}"
   key_name               = "Jenkins-Terraform-Ansible-K8s"
+  iam_instance_profile   = aws_iam_role.kubeadm_role.name
 
 
   tags = {

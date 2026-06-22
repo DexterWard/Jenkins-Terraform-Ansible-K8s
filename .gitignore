@@ -46,6 +46,10 @@ terraform.rc
 #Ignore key-pair files
 *.pem
 
+
+#Ignore credential files
+*.csv
+
 #Ignore the steps
 Steps.txt
 Post-steps.txt
