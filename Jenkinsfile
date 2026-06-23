@@ -127,10 +127,10 @@ pipeline {
             steps {
                 dir('/home/jenkins/workspace/Project1/Terraform') {
                     sh '''
-                    terraform output -raw vpc_id'
+                    terraform output -raw vpc_id
                     echo "Installing Kubernetes objects..."
                     sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=$(terraform output -raw vpc_id)" -e "region=$REGION" /home/jenkins/workspace/Project1/Ansible/ALB.yaml
-                '''
+                    '''
                 }
                /* echo "Deploying app"
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/k8s.yaml
