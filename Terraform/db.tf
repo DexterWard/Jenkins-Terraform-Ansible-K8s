@@ -11,3 +11,11 @@ resource "aws_db_instance" "db1" {
   vpc_security_group_ids = [aws_security_group.db.id]
   depends_on             = [aws_security_group.db]
 }
+
+data "aws_db_instance" "database" {
+  db_instance_identifier = "k8s"
+}
+
+output "database_address" {
+  value = data.aws_db_instance.database.address
+}

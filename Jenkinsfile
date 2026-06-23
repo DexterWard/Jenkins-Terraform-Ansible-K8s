@@ -132,9 +132,10 @@ pipeline {
                     sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=$(terraform output -raw vpc_id)" -e "region=$REGION" /home/jenkins/workspace/Project1/Ansible/ALB.yaml
                     '''
                 }
-               /* echo "Deploying app"
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/k8s.yaml
-                */
+                sh '''
+                echo "Deploying app"
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "db_host=${terraform output -raw database_address}" -e "db_pass=$DB_PASS" /home/jenkins/workspace/Project1/Ansible/secret.yaml
+                '''
             }
         }
     }
