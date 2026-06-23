@@ -16,6 +16,7 @@ pipeline {
                 REGION = credentials('REGION')
                 INSTANCE_TYPE = credentials('INSTANCE_TYPE')
                 AMI = credentials('AMI')
+                DB_PASS = credentials('db_password')
                 
             }
             steps {
@@ -40,7 +41,8 @@ pipeline {
                     -var="access_key=$ACCESS_KEY" \
                     -var="secret_key=$SECRET_KEY" \
                     -var="instance_type=$INSTANCE_TYPE" \
-                    -var="ami=$AMI"
+                    -var="ami=$AMI" \
+                    -var="db_password=$DB_PASS"
                 '''
                 }
                 
@@ -129,9 +131,10 @@ pipeline {
                 sh '''
                 echo "Installing Kubernetes objects..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/ALB.yaml
-                echo "Deploying app"
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/k8s.yaml
                 '''
+               /* echo "Deploying app"
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/k8s.yaml
+                */
             }
         }
     }
