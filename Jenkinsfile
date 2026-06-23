@@ -1,6 +1,17 @@
 pipeline {
     agent any
 
+    environment {
+                ACCESS_KEY = credentials('ACCESS_KEY')
+                SECRET_KEY = credentials('SECRET_KEY')
+                ACCOUNT_ID = credentials('ACCOUNT_ID')
+                REGION = credentials('REGION')
+                INSTANCE_TYPE = credentials('INSTANCE_TYPE')
+                AMI = credentials('AMI')
+                DB_PASS = credentials('db_password')
+                
+            }
+
     stages {
 
         stage('Checkout') {
@@ -10,15 +21,7 @@ pipeline {
         }
 
         stage('Terraform') {
-            environment {
-                ACCESS_KEY = credentials('ACCESS_KEY')
-                SECRET_KEY = credentials('SECRET_KEY')
-                REGION = credentials('REGION')
-                INSTANCE_TYPE = credentials('INSTANCE_TYPE')
-                AMI = credentials('AMI')
-                DB_PASS = credentials('db_password')
-                
-            }
+            
             steps {
                 //Check variable values
             /*    sh '''
@@ -103,12 +106,6 @@ pipeline {
         }
         
         stage('Build') {
-            environment {
-                REGION = credentials('REGION')
-                ACCOUNT_ID = credentials('ACCOUNT_ID')
-                ACCESS_KEY = credentials('ACCESS_KEY')
-                SECRET_KEY = credentials('SECRET_KEY')
-            }
 
             steps {
                 sh '''
@@ -128,10 +125,13 @@ pipeline {
 
         stage('K8s') {
             steps {
-                sh '''
-                echo "Installing Kubernetes objects..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/ALB.yaml
+                dir('/home/jenkins/workspace/Project1/Terraform') {
+                    sh '''
+                    terraform output -raw vpc_id'
+                    echo "Installing Kubernetes objects..."
+                    sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=$(terraform output -raw vpc_id)" -e "region=$REGION" /home/jenkins/workspace/Project1/Ansible/ALB.yaml
                 '''
+                }
                /* echo "Deploying app"
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/k8s.yaml
                 */
