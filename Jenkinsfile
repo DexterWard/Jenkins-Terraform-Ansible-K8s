@@ -134,7 +134,7 @@ pipeline {
                 }
                 sh '''
                 echo "Deploying app"
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "db_host=${terraform output -raw database_address}" -e "db_pass=$DB_PASS" /home/jenkins/workspace/Project1/Ansible/secret.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "db_host=$(terraform output -raw database_address)" -e "db_pass=$DB_PASS" /home/jenkins/workspace/Project1/Ansible/secret.yaml
                 '''
             }
         }
