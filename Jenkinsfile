@@ -83,10 +83,10 @@ pipeline {
                         chmod 644 /tmp/ansible_key.pem
                         sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '172.31.1.1' || true
                         sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '172.31.1.2' || true
-                        sleep 10
+                        sleep 5
                         sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.1 >> /home/ansible/.ssh/known_hosts"
                         sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.2 >> /home/ansible/.ssh/known_hosts"
-                        sleep 10
+                        sleep 5
                     '''
 
                     //sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/kubeadm-ansible/site.yaml
@@ -96,7 +96,7 @@ pipeline {
                     sh '''
                         echo 'Execute the Ansible playbooks in the master node...'
                         sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/kubeadm_master.yaml
-                        sleep 10
+                        sleep 5
                         echo 'Execute the Ansible playbooks in the worker node...'
                         sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/kubeadm_node.yaml
                     '''
@@ -116,9 +116,13 @@ pipeline {
 
                 echo "Logging into AWS ECR..."
                 aws ecr get-login-password --region $REGION --profile terraform | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
+
                 echo "Build, tag and push image..."
-                docker build -t demo-app:${BUILD_NUMBER} -t demo-app:latest demo-app/  
-                docker push --all-tags $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
+                
+                docker build -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER} -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:latest demo-app/
+                
+                docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}
+                docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:latest
                 '''
             }
         }
