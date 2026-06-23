@@ -13,5 +13,6 @@ resource "aws_db_instance" "db1" {
 }
 
 output "vpc_id" {
-  value = aws_db_instance.db1.vpc_security_group_ids
+  value = element(tolist(aws_db_instance.db1.vpc_security_group_ids), 0)
+  //value = aws_db_instance.db1.vpc_security_group_ids
 }
