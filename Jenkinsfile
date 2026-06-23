@@ -124,13 +124,13 @@ pipeline {
         }
 
         stage('K8s') {
-            export VPC_ID=$(terraform output -raw vpc_id)
-            export DB_HOST=$(terraform output -raw database_address)
             
             steps {
-         
+
                 sh '''
-                   
+                export VPC_ID=$(terraform output -raw vpc_id)
+                export DB_HOST=$(terraform output -raw database_address)
+
                 echo "Installing Kubernetes objects..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=$VPC_ID" -e "region=$REGION" /home/jenkins/workspace/Project1/Ansible/ALB.yaml
     
