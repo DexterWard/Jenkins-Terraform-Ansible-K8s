@@ -11,8 +11,3 @@ resource "aws_db_instance" "db1" {
   vpc_security_group_ids = [aws_security_group.db.id]
   depends_on             = [aws_security_group.db]
 }
-
-output "vpc_id" {
-  value = element(tolist(aws_db_instance.db1.vpc_security_group_ids), 0)
-  //value = aws_db_instance.db1.vpc_security_group_ids
-}

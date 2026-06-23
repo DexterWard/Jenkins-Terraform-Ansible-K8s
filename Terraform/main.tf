@@ -68,3 +68,11 @@ resource "aws_ecr_repository" "ecr" {
     scan_on_push = true
   }
 }
+
+data "aws_vpc" "default" {
+  default = true
+}
+
+output "vpc_id" {
+  value = data.aws_vpc.default.id
+}
