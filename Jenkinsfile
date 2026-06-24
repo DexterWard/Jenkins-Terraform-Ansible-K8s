@@ -112,22 +112,13 @@ pipeline {
         stage('Build') {
 
             steps {
-                /*sh '''
-                echo "Configure AWS profile"
-                aws configure set profile.terraform.aws_access_key_id $ACCESS_KEY
-                aws configure set profile.terraform.aws_secret_access_key $SECRET_KEY
-                aws configure set profile.terraform.region $REGION*/
+                
        
                 sh '''
                 echo "Logging into AWS ECR..."
                 aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
-                '''
-                /*
-                aws ecr get-login-password --region $REGION --profile terraform | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project*/
-
-                sh '''
-                echo "Build, tag and push image..."
                 
+                echo "Build, tag and push image..."
                 docker build -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER} -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:latest demo-app/
                 
                 docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}
@@ -152,8 +143,17 @@ pipeline {
                 echo "Creating secret..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" /home/jenkins/workspace/Project1/Ansible/playbook-rds-secret.yaml
 
+                echo "Check AWS variables"
+                echo "Jenkins user:"
+                env | grep AWS
+
+                echo
+                echo "Ansible user:"
+                sudo -u ansible env | grep AWS
+
+
                 echo "Authenticating into ECR..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ecr_server=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com" -e "region=$REGION" /home/jenkins/workspace/Project1/Ansible/playbook-ecr-secret.yaml
+                sudo -E -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ecr_server=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com" -e "region=$REGION" /home/jenkins/workspace/Project1/Ansible/playbook-ecr-secret.yaml
 
                 echo "Creating deployment..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ACCOUNT_ID=$ACCOUNT_ID" -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" -e "REGION=$REGION" -e "IMAGE_TAG=$BUILD_NUMBER" /home/jenkins/workspace/Project1/Ansible/playbook-deployment.yaml
