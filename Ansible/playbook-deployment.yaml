@@ -1,0 +1,21 @@
+- name: Deployment
+  hosts: master
+  become: true
+
+  tasks:
+
+    - name: Render Deployment
+      ansible.builtin.template:
+        src: templates/deployment.yaml.j2
+        dest: /tmp/deployment.yaml
+
+    - name: Show rendered deployment
+      ansible.builtin.shell: cat /tmp/deployment.yaml
+      register: deployment_yaml
+
+    - debug:
+        var: deployment_yaml.stdout_lines
+
+    - name: Apply Deployment
+      ansible.builtin.shell: |
+        kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/deployment.yaml
