@@ -9,6 +9,10 @@ pipeline {
                 INSTANCE_TYPE = credentials('INSTANCE_TYPE')
                 AMI = credentials('AMI')
                 DB_PASS = credentials('db_password')
+
+                AWS_ACCESS_KEY_ID = "${ACCESS_KEY}"
+                AWS_SECRET_ACCESS_KEY = "${SECRET_KEY}"
+                AWS_DEFAULT_REGION = "${REGION}"
                 
             }
 
@@ -108,14 +112,18 @@ pipeline {
         stage('Build') {
 
             steps {
-                sh '''
+                /*sh '''
                 echo "Configure AWS profile"
                 aws configure set profile.terraform.aws_access_key_id $ACCESS_KEY
                 aws configure set profile.terraform.aws_secret_access_key $SECRET_KEY
-                aws configure set profile.terraform.region $REGION
-
+                aws configure set profile.terraform.region $REGION*/
+       
+                sh '''
                 echo "Logging into AWS ECR..."
-                aws ecr get-login-password --region $REGION --profile terraform | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
+                aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
+                '''
+                /*
+                aws ecr get-login-password --region $REGION --profile terraform | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project*/
 
                 echo "Build, tag and push image..."
                 
