@@ -71,7 +71,6 @@ resource "aws_ecr_repository" "ecr" {
 
 data "aws_vpc" "default" {
   default = true
-  depends_on = [ aws_db_instance.db1 ]
 }
 
 output "vpc_id" {
