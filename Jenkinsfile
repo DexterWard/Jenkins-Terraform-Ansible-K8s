@@ -143,13 +143,7 @@ pipeline {
                 echo "Creating secret..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" /home/jenkins/workspace/Project1/Ansible/playbook-rds-secret.yaml
 
-                echo "Check AWS variables"
-                echo "Jenkins user:"
-                env | grep AWS
-
-                echo
-                echo "Ansible user:"
-                sudo -u ansible env | grep AWS
+        
 
 
                 echo "Authenticating into ECR..."
