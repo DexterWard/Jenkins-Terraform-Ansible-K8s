@@ -18,25 +18,25 @@ spec:
               env:
           
               - name: DB_HOST
-                    valueFrom:
-                        secretKeyRef:
-                            name: rds-secret
-                            key: db-host
-          
+                valueFrom:
+                    secretKeyRef:
+                        name: rds-secret
+                        key: db-host
+        
               - name: DB_NAME
-                    valueFrom:
-                        secretKeyRef:
-                            name: rds-secret
-                            key: db-name
+                valueFrom:
+                    secretKeyRef:
+                        name: rds-secret
+                        key: db-name
 
               - name: DB_USER
-                    valueFrom:
-                        secretKeyRef:
-                            name: rds-secret
-                            key: db-user
+                valueFrom:
+                    secretKeyRef:
+                        name: rds-secret
+                        key: db-user
 
               - name: DB_PASSWORD
-                    valueFrom:
-                        secretKeyRef:
-                            name: rds-secret
-                            key: db-password
+                valueFrom:
+                    secretKeyRef:
+                        name: rds-secret
+                        key: db-password
