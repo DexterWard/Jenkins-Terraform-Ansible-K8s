@@ -28,6 +28,11 @@ resource "aws_instance" "kubeadm" {
   key_name               = "Jenkins-Terraform-Ansible-K8s"
   iam_instance_profile   = aws_iam_instance_profile.kubeadm_profile.name
 
+  root_block_device {
+    volume_size = 20
+    volume_type = "gp3"
+    encrypted   = true
+  }
 
   tags = {
     Name = "kubeadm-${local.ec2-name[count.index]}"

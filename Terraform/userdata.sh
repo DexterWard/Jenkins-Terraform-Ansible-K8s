@@ -72,3 +72,13 @@ apt-cache madison kubeadm
 apt install -y kubelet=1.32.0-1.1 kubeadm=1.32.0-1.1 kubectl=1.32.0-1.1 cri-tools=1.32.0-1.1
 apt-mark hold kubelet kubeadm kubectl
 systemctl enable --now kubelet
+
+#Install aws cli
+apt install unzip
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
+
+#Install ECR credential helper
+apt update
+apt install -y amazon-ecr-credential-helper
