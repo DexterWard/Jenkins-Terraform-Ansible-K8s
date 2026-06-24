@@ -125,6 +125,7 @@ pipeline {
                 /*
                 aws ecr get-login-password --region $REGION --profile terraform | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project*/
 
+                sh '''
                 echo "Build, tag and push image..."
                 
                 docker build -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER} -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:latest demo-app/
