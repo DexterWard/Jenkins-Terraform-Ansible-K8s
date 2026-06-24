@@ -109,16 +109,28 @@ pipeline {
             }
         }
 
+        stage('Get Terraform Outputs') {
+    
+            steps {
+                script {
+                    dir('/home/jenkins/workspace/Project1/Terraform') {
+                        env.VPC_ID = sh(
+                            script: 'terraform output -raw vpc_id',
+                            returnStdout: true
+                        ).trim()
+
+                        env.DB_HOST = sh(
+                            script: 'terraform output -raw database_address',
+                            returnStdout: true
+                        ).trim()
+                    }
+                }
+            }
+        }
+
         stage('K8s') {
             
             steps {
-
-                dir('/home/jenkins/workspace/Project1/Terraform') {
-                sh '''
-                export VPC_ID=$(terraform output -raw vpc_id)
-                export DB_HOST=$(terraform output -raw database_address)
-                '''
-                }
 
                 sh '''
                 echo "Installing Kubernetes objects..."
