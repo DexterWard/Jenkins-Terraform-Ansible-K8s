@@ -114,8 +114,8 @@ pipeline {
             steps {
 
                 sh '''
-                export VPC_ID=$(terraform output -raw vpc_id)
-                export DB_HOST=$(terraform output -raw database_address)
+                sudo -u ansible export VPC_ID=$(terraform output -raw vpc_id)
+                sudo -u ansible export DB_HOST=$(terraform output -raw database_address)
 
                 echo "Installing Kubernetes objects..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=$VPC_ID" -e "region=$REGION" /home/jenkins/workspace/Project1/Ansible/ALB.yaml
@@ -131,6 +131,8 @@ pipeline {
                 echo "Creating deployment..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ACCOUNT_ID=$ACCOUNT_ID" -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" -e "REGION=$REGION" -e "IMAGE_TAG=$BUILD_NUMBER" /home/jenkins/workspace/Project1/Ansible/playbook-deployment.yaml
                 '''
+
+                sh 'echo "DB_HOST=$DB_HOST"'
             }
         }
     }
