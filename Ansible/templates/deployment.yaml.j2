@@ -13,6 +13,8 @@ spec:
             labels:
                 app: demo-app
         spec:
+            imagePullSecrets:
+            - name: ecr-secret
             containers:
             - name: demo-app
               image: "{{ ACCOUNT_ID }}.dkr.ecr.{{ REGION }}.amazonaws.com/my-project:{{ IMAGE_TAG }}"

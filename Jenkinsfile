@@ -144,7 +144,7 @@ pipeline {
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" /home/jenkins/workspace/Project1/Ansible/playbook-rds-secret.yaml
 
                 echo "Authenticating into ECR..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ecr_server=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com" -e "ecr_token=$(aws ecr get-login-password --region $REGION)" /home/jenkins/workspace/Project1/Ansible/playbook-ecr-secret.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ecr_server=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com" -e "region=$REGION" /home/jenkins/workspace/Project1/Ansible/playbook-ecr-secret.yaml
 
                 echo "Creating deployment..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ACCOUNT_ID=$ACCOUNT_ID" -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" -e "REGION=$REGION" -e "IMAGE_TAG=$BUILD_NUMBER" /home/jenkins/workspace/Project1/Ansible/playbook-deployment.yaml
