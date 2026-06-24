@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
     name: demo-app
 spec:
+    serviceAccountName: app-sa
     replicas: 2
     selector:
         matchLabels:
