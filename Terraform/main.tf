@@ -27,6 +27,7 @@ resource "aws_instance" "kubeadm" {
   private_ip             = "172.31.1.${local.last-digit[count.index]}"
   key_name               = "Jenkins-Terraform-Ansible-K8s"
   iam_instance_profile   = aws_iam_instance_profile.kubeadm_profile.name
+  source_dest_check = false
 
   root_block_device {
     volume_size = 20
@@ -41,8 +42,9 @@ resource "aws_instance" "kubeadm" {
   user_data = templatefile("${path.module}/userdata.sh", {
     ansible_pubkey = file("${path.module}/ansible.pub")
   })
-  
+
   user_data_replace_on_change = true
+
 
 
   /*   connection {
