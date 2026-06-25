@@ -14,7 +14,7 @@ resource "aws_db_instance" "db1" {
 
 data "aws_db_instance" "database" {
   db_instance_identifier = "k8s"
-  depends_on = [ aws_db_instance.db1 ]
+  depends_on             = [aws_db_instance.db1]
 }
 
 output "database_address" {

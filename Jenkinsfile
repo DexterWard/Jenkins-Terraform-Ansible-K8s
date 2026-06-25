@@ -28,16 +28,7 @@ pipeline {
         stage('Terraform') {
             
             steps {
-                //Check variable values
-            /*    sh '''
-                    echo "REGION=$REGION"
-                    echo "INSTANCE_TYPE=$INSTANCE_TYPE"
-                    echo "AMI=$AMI"
-                '''
-                sh '''
-                    [ -n "$ACCESS_KEY" ] && echo "ACCESS_KEY is set"
-                    [ -n "$SECRET_KEY" ] && echo "SECRET_KEY is set"
-                '''*/
+
               //  dir('/home/jenkins/workspace/Project1/Terraform') {
   
                 dir("${env.WORKSPACE}/Terraform") {
@@ -116,7 +107,7 @@ pipeline {
     
             steps {
                 script {
-                    dir('/home/jenkins/workspace/Project1/Terraform') {
+                    dir("${env.WORKSPACE}/Terraform") {
                         env.VPC_ID = sh(
                             script: 'terraform output -raw vpc_id',
                             returnStdout: true
@@ -151,7 +142,7 @@ pipeline {
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ACCOUNT_ID=$ACCOUNT_ID" -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" -e "REGION=$REGION" -e "IMAGE_TAG=$BUILD_NUMBER" /home/jenkins/workspace/Project1/Ansible/playbook-deployment.yaml
                 '''
 
-                sh 'echo "DB_HOST=$DB_HOST"'
+            //    sh 'echo "DB_HOST=$DB_HOST"'
                 
             }
         }
