@@ -37,7 +37,8 @@ pipeline {
                     [ -n "$ACCESS_KEY" ] && echo "ACCESS_KEY is set"
                     [ -n "$SECRET_KEY" ] && echo "SECRET_KEY is set"
                 '''*/
-                dir('/home/jenkins/workspace/Project1/Terraform') {
+              //  dir('/home/jenkins/workspace/Project1/Terraform') {
+                dir('${WORKSPACE}/${JOB_NAME}/Terraform'){
                 sh 'echo "Linting Terraform code..."'
                 sh 'terraform fmt'
                 sh 'echo "Intialize Terraform plugins and providers..."'
