@@ -68,13 +68,21 @@ pipeline {
                         sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '172.31.1.2' || true
                         
                         for i in {1..30}; do
-                            sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.1 >> /home/ansible/.ssh/known_hosts && break"
+                            if sudo -u ansible ssh-keyscan -H 172.31.1.1 >> /home/ansible/.ssh/known_hosts 2>/dev/null; then
+                                echo "SSH ready on 172.31.1.1"
+                                break
+                            fi
+
                             echo "waiting for ssh on 172.31.1.1..."
                             sleep 5
                         done
 
-                        for i in {1..30}; do
-                            sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.2 >> /home/ansible/.ssh/known_hosts && break"
+                          for i in {1..30}; do
+                            if sudo -u ansible ssh-keyscan -H 172.31.1.2 >> /home/ansible/.ssh/known_hosts 2>/dev/null; then
+                                echo "SSH ready on 172.31.1.2"
+                                break
+                            fi
+
                             echo "waiting for ssh on 172.31.1.2..."
                             sleep 5
                         done
