@@ -72,7 +72,7 @@ pipeline {
                         sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.1 >> /home/ansible/.ssh/known_hosts"
                         sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.2 >> /home/ansible/.ssh/known_hosts"
                         
-                        sleep 60
+                        sleep 30
 
                         echo 'Execute the Ansible playbooks in the master node...'
                         sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/kubeadm_master.yaml
