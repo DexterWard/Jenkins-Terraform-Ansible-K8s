@@ -40,7 +40,7 @@ pipeline {
               //  dir('/home/jenkins/workspace/Project1/Terraform') {
                 sh 'echo ${WORKSPACE}'
                 sh 'echo ${JOB_NAME}'
-                dir('${WORKSPACE}/${JOB_NAME}/Terraform'){
+                dir('${WORKSPACE}/Terraform'){
                 sh 'echo "Linting Terraform code..."'
                 sh 'terraform fmt'
                 sh 'echo "Intialize Terraform plugins and providers..."'
