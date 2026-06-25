@@ -18,6 +18,14 @@
       dest: /tmp/join.sh
       mode: "0755"
 
+   - name: Adjust conntrack
+     ansible.builtin.shell: |
+      cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-conntrack.conf
+      net.netfilter.nf_conntrack_max = 262144
+      net.netfilter.nf_conntrack_buckets = 65536
+      EOF
+      sysctl --system
+
    - name: Join the cluster
      ansible.builtin.shell: bash /tmp/join.sh
      when: not kubelet_conf.stat.exists

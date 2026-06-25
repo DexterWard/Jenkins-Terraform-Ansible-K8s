@@ -59,3 +59,7 @@
       src: /tmp/join.sh
       dest: /tmp/join.sh
       flat: true
+
+   - name: Wait for Calico to be ready
+     ansible.builtin.shell: |
+       kubectl wait --for=condition=Ready pod -l k8s-app=calico-node -n calico-system --timeout=300s
