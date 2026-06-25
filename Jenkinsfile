@@ -38,6 +38,8 @@ pipeline {
                     [ -n "$SECRET_KEY" ] && echo "SECRET_KEY is set"
                 '''*/
               //  dir('/home/jenkins/workspace/Project1/Terraform') {
+                sh 'echo ${WORKSPACE}'
+                sh 'echo ${JOB_NAME}'
                 dir('${WORKSPACE}/${JOB_NAME}/Terraform'){
                 sh 'echo "Linting Terraform code..."'
                 sh 'terraform fmt'
