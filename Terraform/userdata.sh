@@ -36,9 +36,13 @@ modprobe overlay
 modprobe br_netfilter
 
 cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+net.netfilter.nf_conntrack_max = 262144
 net.bridge.bridge-nf-call-iptables  = 1
 net.ipv4.ip_forward                 = 1
 net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.conf.all.rp_filter = 0
+net.ipv4.conf.default.rp_filter = 0
+net.ipv4.conf.ens5.rp_filter = 0
 EOF
 
 sysctl --system
