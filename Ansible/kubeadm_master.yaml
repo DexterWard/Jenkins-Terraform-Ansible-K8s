@@ -37,7 +37,7 @@
       - "'not found' not in untaint_result.stderr"
 
    - name: Install tigera operator
-     ansible.builtin.shell: |     
+     ansible.builtin.shell: |
       kubectl --kubeconfig=/home/ansible/.kube/config apply --server-side -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/tigera-operator.yaml
 
    - name: Install calico
@@ -62,4 +62,5 @@
 
    - name: Wait for Calico to be ready
      ansible.builtin.shell: |
+       sleep 30
        kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready pod -l k8s-app=calico-node -n calico-system --timeout=300s
