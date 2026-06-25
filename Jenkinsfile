@@ -13,7 +13,7 @@ pipeline {
                 AWS_ACCESS_KEY_ID = "${ACCESS_KEY}"
                 AWS_SECRET_ACCESS_KEY = "${SECRET_KEY}"
                 AWS_DEFAULT_REGION = "${REGION}"
-                PATH = "${WORKSPACE}"
+           
                 
             }
 
@@ -40,7 +40,7 @@ pipeline {
                 '''*/
               //  dir('/home/jenkins/workspace/Project1/Terraform') {
               //  sh 'echo ${WORKSPACE}'
-                sh 'echo ${PATH}'
+  
                 dir('${PATH}/Terraform'){
                 sh 'echo "Linting Terraform code..."'
                 sh 'terraform fmt'
