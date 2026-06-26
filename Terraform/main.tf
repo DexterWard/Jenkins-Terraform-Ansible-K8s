@@ -15,19 +15,36 @@ provider "aws" {
 
 locals {
   ec2-name   = ["master", "node"]
-  last-digit = ["1", "2"]
+//  last-digit = ["1", "2"]
+}
+
+resource "aws_ecr_repository" "ecr" {
+  name                 = "my-project"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }
 
 resource "aws_instance" "kubeadm" {
   ami                    = var.ami
   instance_type          = var.instance_type
-  subnet_id              = "subnet-06c46458612776034"
+//  subnet_id              = "subnet-06c46458612776034"
   vpc_security_group_ids = [aws_security_group.k8s.id]
   count                  = 2
-  private_ip             = "172.31.1.${local.last-digit[count.index]}"
+//  private_ip             = "172.31.1.${local.last-digit[count.index]}"
   key_name               = "Jenkins-Terraform-Ansible-K8s"
   iam_instance_profile   = aws_iam_instance_profile.kubeadm_profile.name
   source_dest_check      = false
+
+  subnet_id = element(
+  [
+    aws_subnet.public_a.id,
+    aws_subnet.public_b.id
+  ],
+  count.index
+)
 
   root_block_device {
     volume_size = 20
@@ -69,19 +86,10 @@ resource "aws_instance" "kubeadm" {
   }*/
 }
 
-resource "aws_ecr_repository" "ecr" {
-  name                 = "my-project"
-  image_tag_mutability = "MUTABLE"
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
+output "master" {
+  value = aws_instance.kubeadm[0].private_ip
 }
 
-data "aws_vpc" "default" {
-  default = true
-}
-
-output "vpc_id" {
-  value = data.aws_vpc.default.id
+output "worker" {
+  value = aws_instance.kubeadm[1].private_ip
 }

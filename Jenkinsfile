@@ -45,6 +45,29 @@ pipeline {
                     -var="ami=$AMI" \
                     -var="db_password=$DB_PASS"
                 '''
+
+                env.VPC_ID = sh(
+                            script: 'terraform output -raw vpc_id',
+                            returnStdout: true
+                            ).trim()
+
+                env.DB_HOST = sh(
+                            script: 'terraform output -raw database_address',
+                            returnStdout: true
+                            ).trim()
+
+                
+                env.MASTER = sh(
+                            script: 'terraform output -raw master',
+                            returnStdout: true
+                            ).trim()
+
+                
+                env.WORKER = sh(
+                            script: 'terraform output -raw worker',
+                            returnStdout: true
+                            ).trim()
+
                 }
                 
             }
@@ -61,46 +84,61 @@ pipeline {
                 ]) {
 
                     sh '''
+                        echo 'Adding the node IPs'
+      
+                        echo "${MASTER} kubeadm-master" >> /etc/hosts
+                        echo "${WORKER} kubeadm-node" >> /etc/hosts
+
+                        echo 'Create hosts.ini for Ansible provisioning'
+
+                        cat > {env.WORKSPACE}/Ansible/hosts.ini <<EOF
+                        [master]
+                        ${env.MASTER} ansible_python_interpreter='python3'
+
+                        [node]
+                        ${env.WORKER} ansible_python_interpreter='python3'
+                        
+                        [kube_cluster:children]
+                        master
+                        node
+                        EOF
+
+
                         echo 'Copying the ssh key to execute the playbooks...'
                         cp "$SSH_KEY" /tmp/ansible_key.pem
                         chmod 644 /tmp/ansible_key.pem
-                        sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '172.31.1.1' || true
-                        sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '172.31.1.2' || true
+                        sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${MASTER}' || true
+                        sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${WORKER}' || true
                         
                         for i in {1..30}; do
-                            if sudo -u ansible sh -c 'ssh-keyscan -H 172.31.1.1 >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
-                                echo "SSH ready on 172.31.1.1"
+                            if sudo -u ansible sh -c 'ssh-keyscan -H ${MASTER} >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
+                                echo "SSH ready on ${MASTER}"
                                 break
                             fi
 
-                            echo "waiting for ssh on 172.31.1.1..."
+                            echo "waiting for ssh on ${MASTER}..."
                             sleep 5
                         done
 
                         for i in {1..30}; do
-                            if sudo -u ansible sh -c 'ssh-keyscan -H 172.31.1.2 >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
-                                echo "SSH ready on 172.31.1.2"
+                            if sudo -u ansible sh -c 'ssh-keyscan -H ${WORKER} >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
+                                echo "SSH ready on ${WORKER}"
                                 break
                             fi
 
-                            echo "waiting for ssh on 172.31.1.2..."
+                            echo "waiting for ssh on ${WORKER}..."
                             sleep 5
                         done
-                        '''
-                        /*
-                        sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.1 >> /home/ansible/.ssh/known_hosts"
-                        sudo -u ansible sh -c "ssh-keyscan -H 172.31.1.2 >> /home/ansible/.ssh/known_hosts"
-                        */
-                        sh '''
+         
 
                         echo 'Execute the Ansible playbooks in the master node...'
-                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/playbook-kubeadm_master.yaml
+                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-kubeadm_master.yaml
                         
                         echo 'Execute the Ansible playbooks in the worker node...'
-                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/playbook-kubeadm_node.yaml
+                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-kubeadm_node.yaml
 
                         echo 'Execute the synchronization playbook...'
-                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/playbook-sync.yaml
+                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-sync.yaml
 
                     '''
                     }
@@ -125,24 +163,6 @@ pipeline {
             }
         }
 
-        stage('Get Terraform Outputs') {
-    
-            steps {
-                script {
-                    dir("${env.WORKSPACE}/Terraform") {
-                        env.VPC_ID = sh(
-                            script: 'terraform output -raw vpc_id',
-                            returnStdout: true
-                        ).trim()
-
-                        env.DB_HOST = sh(
-                            script: 'terraform output -raw database_address',
-                            returnStdout: true
-                        ).trim()
-                    }
-                }
-            }
-        }
 
         stage('K8s') {
             
@@ -150,21 +170,21 @@ pipeline {
 
                 sh '''
                 echo "Installing Kubernetes objects..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=$VPC_ID" -e "region=$REGION" /home/jenkins/workspace/Project1/Ansible/playbook-ALB.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=$VPC_ID" -e "region=$REGION" ${env.WORKSPACE}/Ansible/playbook-ALB.yaml
     
                 echo "Deploying app"
 
                 echo "Creating secret..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" /home/jenkins/workspace/Project1/Ansible/playbook-rds-secret.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" ${env.WORKSPACE}/Ansible/playbook-rds-secret.yaml
 
                 echo "Authenticating into ECR..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "region=$REGION" -e "aws_access_key_id=$AWS_ACCESS_KEY_ID" -e "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" -e "ecr_server=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com" /home/jenkins/workspace/Project1/Ansible/playbook-ecr-secret.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "region=$REGION" -e "aws_access_key_id=$AWS_ACCESS_KEY_ID" -e "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" -e "ecr_server=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com" ${env.WORKSPACE}/Ansible/playbook-ecr-secret.yaml
 
                 echo "Creating deployment and ClusterIP service..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ACCOUNT_ID=$ACCOUNT_ID" -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" -e "REGION=$REGION" -e "IMAGE_TAG=$BUILD_NUMBER" /home/jenkins/workspace/Project1/Ansible/playbook-deployment.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ACCOUNT_ID=$ACCOUNT_ID" -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" -e "REGION=$REGION" -e "IMAGE_TAG=$BUILD_NUMBER" ${env.WORKSPACE}/Ansible/playbook-deployment.yaml
 
                 echo "Creating ingress..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i /home/jenkins/workspace/Project1/Ansible/hosts.ini --private-key /tmp/ansible_key.pem /home/jenkins/workspace/Project1/Ansible/playbook-ingress.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-ingress.yaml
 
 
                 '''
