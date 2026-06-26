@@ -135,13 +135,13 @@ pipeline {
        
                 sh """
                 echo "Logging into AWS ECR..."
-                aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
+                aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/my-project
                 
                 echo "Build, tag and push image..."
-                docker build -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER} -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:latest demo-app/
+                docker build -t ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/my-project:${BUILD_NUMBER} -t ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/my-project:latest demo-app/
                 
-                docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}
-                docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:latest
+                docker push ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/my-project:${BUILD_NUMBER}
+                docker push ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/my-project:latest
                 """
             }
         }
@@ -153,18 +153,18 @@ pipeline {
 
                 sh """
                 echo "Installing Kubernetes objects..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=$VPC_ID" -e "region=$REGION" ${env.WORKSPACE}/Ansible/playbook-ALB.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=$VPC_ID" -e "region=${REGION}" ${env.WORKSPACE}/Ansible/playbook-ALB.yaml
     
                 echo "Deploying app"
 
                 echo "Creating secret..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" ${env.WORKSPACE}/Ansible/playbook-rds-secret.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "db_host=${DB_HOST}" -e "db_pass=${DB_PASS}" ${env.WORKSPACE}/Ansible/playbook-rds-secret.yaml
 
                 echo "Authenticating into ECR..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "region=$REGION" -e "aws_access_key_id=$AWS_ACCESS_KEY_ID" -e "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" -e "ecr_server=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com" ${env.WORKSPACE}/Ansible/playbook-ecr-secret.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "region=${REGION}" -e "aws_access_key_id=${AWS_ACCESS_KEY_ID}" -e "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" -e "ecr_server=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com" ${env.WORKSPACE}/Ansible/playbook-ecr-secret.yaml
 
                 echo "Creating deployment and ClusterIP service..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ACCOUNT_ID=$ACCOUNT_ID" -e "db_host=$DB_HOST" -e "db_pass=$DB_PASS" -e "REGION=$REGION" -e "IMAGE_TAG=$BUILD_NUMBER" ${env.WORKSPACE}/Ansible/playbook-deployment.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "ACCOUNT_ID=${ACCOUNT_ID}" -e "db_host=${DB_HOST}" -e "db_pass=${DB_PASS}" -e "REGION=${REGION}" -e "IMAGE_TAG=${BUILD_NUMBER}" ${env.WORKSPACE}/Ansible/playbook-deployment.yaml
 
                 echo "Creating ingress..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-ingress.yaml
