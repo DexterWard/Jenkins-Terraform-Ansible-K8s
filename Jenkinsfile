@@ -92,7 +92,40 @@ pipeline {
                     
                     sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${MASTER}' || true
                     sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${WORKER}' || true
-                    
+
+                    for i in {1..60}; do
+                        if ssh \
+                            -i /tmp/ansible_key.pem \
+                            -o StrictHostKeyChecking=no \
+                            -o ConnectTimeout=5 \
+                            ansible@${MASTER} \
+                            "echo ready" >/dev/null 2>&1
+                        then
+                            echo "Master ready"
+                            break
+                        fi
+
+                        echo "Waiting for master..."
+                        sleep 10
+                    done
+
+                    for i in {1..60}; do
+                        if ssh \
+                            -i /tmp/ansible_key.pem \
+                            -o StrictHostKeyChecking=no \
+                            -o ConnectTimeout=5 \
+                            ansible@${WORKER} \
+                            "echo ready" >/dev/null 2>&1
+                        then
+                            echo "Worker ready"
+                            break
+                        fi
+
+                        echo "Waiting for worker..."
+                        sleep 10
+                    done
+                    """
+                    /*
                     for i in {1..30}; do
                         if sudo -u ansible sh -c 'ssh-keyscan -H ${MASTER} >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
                             echo "SSH ready on ${MASTER}"
@@ -111,9 +144,9 @@ pipeline {
 
                         echo "waiting for ssh on ${WORKER}..."
                         sleep 20
-                    done
+                    done*/
         
-
+                    sh """
                     echo 'Execute the Ansible playbooks in the master node...'
                     sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-kubeadm_master.yaml
                     
