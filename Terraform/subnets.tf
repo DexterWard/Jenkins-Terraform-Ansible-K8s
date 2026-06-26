@@ -30,5 +30,5 @@ resource "aws_subnet" "public_b" {
 }
 
 output "vpc_id" {
-  value = data.aws_vpc.main.id
+  value = aws_vpc.main.id
 }
