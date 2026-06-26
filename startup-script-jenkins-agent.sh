@@ -42,23 +42,3 @@ useradd -m -s /bin/bash ansible
 #Install Ansible
 su -u ansible -c "pipx install --include-deps ansible"
 su -u ansible -c "pipx install ansible-core"
-
-
-#Add the K8s nodes to /etc/hosts
-echo "172.31.1.1 kubeadm-master" >> /etc/hosts
-echo "172.31.1.2 kubeadm-node" >> /etc/hosts
-
-#Create hosts.ini for Ansible provisioning
-cat <<EOF > /home/ansible/hosts.ini
-[master]
-172.31.1.1 ansible_python_interpreter='python3'
-
-[node]
-172.31.1.2 ansible_python_interpreter='python3'
-
-[kube-cluster:children]
-master
-node
-
-
-EOF
