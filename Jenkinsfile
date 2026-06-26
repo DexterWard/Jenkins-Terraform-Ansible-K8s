@@ -34,39 +34,24 @@ pipeline {
                 dir("${env.WORKSPACE}/Terraform") {
                 sh 'echo "Linting Terraform code..."'
                 sh 'terraform fmt'
-                sh 'echo "Intialize Terraform plugins and providers..."'
-                sh 'terraform init'
-                sh '''
-                    terraform apply -auto-approve \
-                    -var="region=$REGION" \
-                    -var="access_key=$ACCESS_KEY" \
-                    -var="secret_key=$SECRET_KEY" \
-                    -var="instance_type=$INSTANCE_TYPE" \
-                    -var="ami=$AMI" \
-                    -var="db_password=$DB_PASS"
-                '''
-
-                env.VPC_ID = sh(
-                            script: 'terraform output -raw vpc_id',
-                            returnStdout: true
-                            ).trim()
-
-                env.DB_HOST = sh(
-                            script: 'terraform output -raw database_address',
-                            returnStdout: true
-                            ).trim()
-
+                sh 'echo "Initialize Terraform plugins and providers..."'
+                sh 'terraform init -reconfigure'
                 
-                env.MASTER = sh(
-                            script: 'terraform output -raw master',
-                            returnStdout: true
-                            ).trim()
+                sh 'echo "Applying changes..."'
+                sh """
+                terraform apply -auto-approve \
+                -var="region=${REGION}" \
+                -var="access_key=${ACCESS_KEY}" \
+                -var="secret_key=${SECRET_KEY}" \
+                -var="instance_type=${INSTANCE_TYPE}" \
+                -var="ami=${AMI}" \
+                -var="db_password=${DB_PASS}"
+                """
 
-                
-                env.WORKER = sh(
-                            script: 'terraform output -raw worker',
-                            returnStdout: true
-                            ).trim()
+                env.VPC_ID = sh(script: 'terraform output -raw vpc_id', returnStdout: true).trim()
+                env.DB_HOST = sh(script: 'terraform output -raw database_address', returnStdout: true).trim()
+                env.MASTER = sh(script: 'terraform output -raw master', returnStdout: true).trim()
+                env.WORKER = sh(script: 'terraform output -raw worker', returnStdout: true).trim()
 
                 }
                 
