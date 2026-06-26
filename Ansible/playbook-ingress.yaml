@@ -1,0 +1,14 @@
+- name: Kubeadm master
+  hosts: master
+  become: true
+
+  tasks:
+
+   - name: Copy ingress manifest
+     ansible.builtin.copy:
+      src: templates/ingress.yaml
+      dest: /tmp/ingress.yaml
+      mode: "0644"
+
+   - name: Apply ingress
+     ansible.builtin.shell: kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/ingress.yaml

@@ -19,3 +19,7 @@
     - name: Apply Deployment
       ansible.builtin.shell: |
         kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/deployment.yaml
+
+    - name: Expose Deployment
+      ansible.builtin.shell: |
+          kubectl --kubeconfig=/home/ansible/.kube/config apply -f templates/service.yaml  
