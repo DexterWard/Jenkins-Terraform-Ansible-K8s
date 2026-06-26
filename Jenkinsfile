@@ -99,7 +99,7 @@ pipeline {
                             waitUntil {
                                 def rc = sh(
                                     script: """
-                                        ssh \
+                                        sudo -u ansible ssh \
                                         -i /tmp/ansible_key.pem \
                                         -o BatchMode=yes \
                                         -o StrictHostKeyChecking=no \
@@ -127,7 +127,7 @@ pipeline {
                             waitUntil {
                                 def rc = sh(
                                     script: """
-                                        ssh \
+                                        sudo -u ansible ssh \
                                         -i /tmp/ansible_key.pem \
                                         -o BatchMode=yes \
                                         -o StrictHostKeyChecking=no \
