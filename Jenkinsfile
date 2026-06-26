@@ -77,7 +77,7 @@ pipeline {
                             sleep 5
                         done
 
-                          for i in {1..30}; do
+                        for i in {1..30}; do
                             if sudo -u ansible sh -c 'ssh-keyscan -H 172.31.1.2 >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
                                 echo "SSH ready on 172.31.1.2"
                                 break
