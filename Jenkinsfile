@@ -72,8 +72,8 @@ pipeline {
                     sh '''
                         echo 'Adding the node IPs'
       
-                        echo "${MASTER} kubeadm-master" >> /etc/hosts
-                        echo "${WORKER} kubeadm-node" >> /etc/hosts
+                        sudo echo "${MASTER} kubeadm-master" >> /etc/hosts
+                        sudo echo "${WORKER} kubeadm-node" >> /etc/hosts
 
                         echo 'Create hosts.ini for Ansible provisioning'
 
