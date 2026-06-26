@@ -69,6 +69,7 @@ pipeline {
                     )
                 ]) {
 
+                script {
                     def hostsFile = "${env.WORKSPACE}/Ansible/hosts.ini"
 
                     sh """
@@ -127,7 +128,8 @@ pipeline {
                     sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-sync.yaml
 
                     """
-                    }
+                }
+                }
                        
             }
         }
