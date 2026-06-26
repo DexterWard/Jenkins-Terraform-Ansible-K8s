@@ -1,5 +1,6 @@
 resource "aws_security_group" "k8s" {
   name = "k8s-sg"
+  vpc_id = aws_vpc.main.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ssh_my_ip" {
