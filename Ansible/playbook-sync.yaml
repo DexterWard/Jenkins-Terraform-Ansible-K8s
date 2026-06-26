@@ -7,4 +7,4 @@
     - name: Wait for node to be Ready
       ansible.builtin.command:
         cmd: >
-          kubectl wait --for=condition=Ready node/kubeadm-node --timeout=300s
+          kubectl wait --kubeconfig=/home/ansible/.kube/config --for=condition=Ready node/kubeadm-node --timeout=300s
