@@ -153,7 +153,7 @@ pipeline {
 
                 sh """
                 echo "Installing Kubernetes objects..."
-                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=$VPC_ID" -e "region=${REGION}" ${env.WORKSPACE}/Ansible/playbook-ALB.yaml
+                sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=${VPC_ID}" -e "region=${REGION}" ${env.WORKSPACE}/Ansible/playbook-ALB.yaml
     
                 echo "Deploying app"
 
