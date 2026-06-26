@@ -1,5 +1,5 @@
-- name: Kubeadm node
-  hosts: node
+- name: Kubeadm master
+  hosts: master
   become: true
 
   tasks:

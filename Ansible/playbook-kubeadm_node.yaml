@@ -29,7 +29,3 @@
    - name: Join the cluster
      ansible.builtin.shell: bash /tmp/join.sh
      when: not kubelet_conf.stat.exists
-
-   - name: Wait for node to be Ready
-     ansible.builtin.shell:
-      kubectl wait --kubeconfig=/home/ansible/.kube/config --for=condition=Ready node/kubeadm-node --timeout=300s
