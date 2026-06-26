@@ -47,11 +47,12 @@ pipeline {
                 -var="ami=${AMI}" \
                 -var="db_password=${DB_PASS}"
                 """
-
-                env.VPC_ID = sh(script: 'terraform output -raw vpc_id', returnStdout: true).trim()
-                env.DB_HOST = sh(script: 'terraform output -raw database_address', returnStdout: true).trim()
-                env.MASTER = sh(script: 'terraform output -raw master', returnStdout: true).trim()
-                env.WORKER = sh(script: 'terraform output -raw worker', returnStdout: true).trim()
+                script {
+                    env.VPC_ID = sh(script: 'terraform output -raw vpc_id', returnStdout: true).trim()
+                    env.DB_HOST = sh(script: 'terraform output -raw database_address', returnStdout: true).trim()
+                    env.MASTER = sh(script: 'terraform output -raw master', returnStdout: true).trim()
+                    env.WORKER = sh(script: 'terraform output -raw worker', returnStdout: true).trim()
+                }
 
                 }
                 
