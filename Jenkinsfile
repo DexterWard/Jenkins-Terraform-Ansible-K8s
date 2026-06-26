@@ -93,37 +93,38 @@ pipeline {
                     sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${MASTER}' || true
                     sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${WORKER}' || true
 
-                    for i in {1..60}; do
-                        if ssh \
-                            -i /tmp/ansible_key.pem \
-                            -o StrictHostKeyChecking=no \
-                            -o ConnectTimeout=5 \
-                            ansible@${MASTER} \
-                            "echo ready" >/dev/null 2>&1
-                        then
-                            echo "Master ready"
-                            break
-                        fi
+                    echo "Waiting for SSH on master..."
 
-                        echo "Waiting for master..."
+                    until ssh \
+                        -i /tmp/ansible_key.pem \
+                        -o BatchMode=yes \
+                        -o StrictHostKeyChecking=no \
+                        -o UserKnownHostsFile=/dev/null \
+                        -o ConnectTimeout=5 \
+                        ansible@${env.MASTER} "echo ok" >/dev/null 2>&1
+                    do
+                        echo "Master not ready yet..."
                         sleep 10
                     done
 
-                    for i in {1..60}; do
-                        if ssh \
-                            -i /tmp/ansible_key.pem \
-                            -o StrictHostKeyChecking=no \
-                            -o ConnectTimeout=5 \
-                            ansible@${WORKER} \
-                            "echo ready" >/dev/null 2>&1
-                        then
-                            echo "Worker ready"
-                            break
-                        fi
+                    echo "Master is ready."
 
-                        echo "Waiting for worker..."
+                    echo "Waiting for SSH on worker..."
+
+                    until ssh \
+                        -i /tmp/ansible_key.pem \
+                        -o BatchMode=yes \
+                        -o StrictHostKeyChecking=no \
+                        -o UserKnownHostsFile=/dev/null \
+                        -o ConnectTimeout=5 \
+                        ansible@${env.WORKER} "echo ok" >/dev/null 2>&1
+                    do
+                        echo "Worker not ready yet..."
                         sleep 10
                     done
+
+                    echo "Worker is ready."
+
                     """
                     /*
                     for i in {1..30}; do
