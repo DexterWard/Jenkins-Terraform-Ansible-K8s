@@ -69,60 +69,64 @@ pipeline {
                     )
                 ]) {
 
-                    sh '''
+                    def hostsFile = "${env.WORKSPACE}/Ansible/hosts.ini"
 
-                        echo 'Create hosts.ini for Ansible provisioning'
+                    sh """
+                    echo 'Create hosts.ini for Ansible provisioning'
+                    
+                    mkdir -p ${env.WORKSPACE}/Ansible
 
-                        cat > {env.WORKSPACE}/Ansible/hosts.ini <<EOF
-                        [master]
-                        ${env.MASTER} ansible_python_interpreter='python3'
+                    cat > ${hostsFile} <<EOF
+                    [master]
+                    ${env.MASTER} ansible_python_interpreter='python3'
 
-                        [node]
-                        ${env.WORKER} ansible_python_interpreter='python3'
-                        
-                        [kube_cluster:children]
-                        master
-                        node
-                        EOF
+                    [node]
+                    ${env.WORKER} ansible_python_interpreter='python3'
+                    
+                    [kube_cluster:children]
+                    master
+                    node
+                    EOF
 
 
-                        echo 'Copying the ssh key to execute the playbooks...'
-                        cp "$SSH_KEY" /tmp/ansible_key.pem
-                        chmod 644 /tmp/ansible_key.pem
-                        sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${MASTER}' || true
-                        sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${WORKER}' || true
-                        
-                        for i in {1..30}; do
-                            if sudo -u ansible sh -c 'ssh-keyscan -H ${MASTER} >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
-                                echo "SSH ready on ${MASTER}"
-                                break
-                            fi
+                    echo 'Copying the ssh key to execute the playbooks...'
+                    cp "$SSH_KEY" /tmp/ansible_key.pem
+                    chmod 644 /tmp/ansible_key.pem
+                    
+                    sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${MASTER}' || true
+                    sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${WORKER}' || true
+                    
+                    for i in {1..30}; do
+                        if sudo -u ansible sh -c 'ssh-keyscan -H ${MASTER} >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
+                            echo "SSH ready on ${MASTER}"
+                            break
+                        fi
 
-                            echo "waiting for ssh on ${MASTER}..."
-                            sleep 5
-                        done
+                        echo "waiting for ssh on ${MASTER}..."
+                        sleep 5
+                    done
 
-                        for i in {1..30}; do
-                            if sudo -u ansible sh -c 'ssh-keyscan -H ${WORKER} >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
-                                echo "SSH ready on ${WORKER}"
-                                break
-                            fi
+                    for i in {1..30}; do
+                        if sudo -u ansible sh -c 'ssh-keyscan -H ${WORKER} >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
+                            echo "SSH ready on ${WORKER}"
+                            break
+                        fi
 
-                            echo "waiting for ssh on ${WORKER}..."
-                            sleep 5
-                        done
-         
+                        echo "waiting for ssh on ${WORKER}..."
+                        sleep 5
+                    done
+        
 
-                        echo 'Execute the Ansible playbooks in the master node...'
-                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-kubeadm_master.yaml
-                        
-                        echo 'Execute the Ansible playbooks in the worker node...'
-                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-kubeadm_node.yaml
+                    echo 'Execute the Ansible playbooks in the master node...'
+                    sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-kubeadm_master.yaml
+                    
+                    echo 'Execute the Ansible playbooks in the worker node...'
+                    sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-kubeadm_node.yaml
 
-                        echo 'Execute the synchronization playbook...'
-                        sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-sync.yaml
+                    echo 'Execute the synchronization playbook...'
+                    sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-sync.yaml
 
-                    '''
+                    """
                     }
                        
             }
@@ -132,7 +136,7 @@ pipeline {
 
             steps {
        
-                sh '''
+                sh """
                 echo "Logging into AWS ECR..."
                 aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project
                 
@@ -141,7 +145,7 @@ pipeline {
                 
                 docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}
                 docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:latest
-                '''
+                """
             }
         }
 
@@ -150,7 +154,7 @@ pipeline {
             
             steps {
 
-                sh '''
+                sh """
                 echo "Installing Kubernetes objects..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem -e "vpc_id=$VPC_ID" -e "region=$REGION" ${env.WORKSPACE}/Ansible/playbook-ALB.yaml
     
@@ -167,9 +171,7 @@ pipeline {
 
                 echo "Creating ingress..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-ingress.yaml
-
-
-                '''
+                """
 
             //    sh 'echo "DB_HOST=$DB_HOST"'
                 
