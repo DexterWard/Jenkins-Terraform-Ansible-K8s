@@ -40,14 +40,14 @@ resource "aws_vpc_security_group_egress_rule" "egress" {
 }
 
 resource "aws_security_group" "db" {
-  name = "db-sg"
+  name   = "db-sg"
   vpc_id = aws_vpc.main.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "postgre_connection" {
-  security_group_id = aws_security_group.db.id
+  security_group_id            = aws_security_group.db.id
   referenced_security_group_id = aws_security_group.k8s.id
-  from_port         = 5432
-  ip_protocol       = "tcp"
-  to_port           = 5432
+  from_port                    = 5432
+  ip_protocol                  = "tcp"
+  to_port                      = 5432
 }

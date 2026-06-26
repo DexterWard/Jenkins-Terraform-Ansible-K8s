@@ -10,7 +10,7 @@ resource "aws_db_instance" "db1" {
   password               = var.db_password
   vpc_security_group_ids = [aws_security_group.db.id]
   depends_on             = [aws_security_group.db]
-  db_subnet_group_name    = aws_db_subnet_group.db.name
+  db_subnet_group_name   = aws_db_subnet_group.db.name
 }
 
 data "aws_db_instance" "database" {

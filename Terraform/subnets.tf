@@ -1,6 +1,6 @@
 resource "aws_vpc" "main" {
-  cidr_block       = "172.31.0.0/16"
-  instance_tenancy = "default"
+  cidr_block           = "172.31.0.0/16"
+  instance_tenancy     = "default"
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -10,9 +10,9 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "public_a" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "172.31.1.0/24"
-  availability_zone = "eu-central-1a"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "172.31.1.0/24"
+  availability_zone       = "eu-central-1a"
   map_public_ip_on_launch = "true"
 
   tags = {
@@ -23,9 +23,9 @@ resource "aws_subnet" "public_a" {
 }
 
 resource "aws_subnet" "public_b" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "172.31.2.0/24"
-  availability_zone = "eu-central-1b"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "172.31.2.0/24"
+  availability_zone       = "eu-central-1b"
   map_public_ip_on_launch = "true"
 
   tags = {
@@ -48,7 +48,7 @@ resource "aws_subnet" "db_b" {
 }
 
 resource "aws_db_subnet_group" "db" {
-  name       = "db-subnet-group"
+  name = "db-subnet-group"
   subnet_ids = [
     aws_subnet.db_a.id,
     aws_subnet.db_b.id

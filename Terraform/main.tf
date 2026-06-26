@@ -34,9 +34,9 @@ resource "aws_instance" "kubeadm" {
   vpc_security_group_ids = [aws_security_group.k8s.id]
   count                  = 2
   //  private_ip             = "172.31.1.${local.last-digit[count.index]}"
-  key_name             = "Jenkins-Terraform-Ansible-K8s"
-  iam_instance_profile = aws_iam_instance_profile.kubeadm_profile.name
-  source_dest_check    = false
+  key_name                    = "Jenkins-Terraform-Ansible-K8s"
+  iam_instance_profile        = aws_iam_instance_profile.kubeadm_profile.name
+  source_dest_check           = false
   associate_public_ip_address = true
 
   subnet_id = element(
