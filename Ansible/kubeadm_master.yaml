@@ -70,7 +70,7 @@
    - name: Wait for nodes
      ansible.builtin.command:
       cmd: >
-        kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready node --all --timeout=300s
+        kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready node/kubeadm-master --all --timeout=300s
 
    - name: Wait for Calico
      ansible.builtin.command:
