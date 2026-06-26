@@ -93,37 +93,61 @@ pipeline {
                     sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${MASTER}' || true
                     sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${WORKER}' || true
 
-                    echo "Waiting for SSH on master..."
+                    script {
+                        timeout(time: 10, unit: 'MINUTES') {
+                            waitUntil {
+                                def rc = sh(
+                                    script: """
+                                        ssh \
+                                        -i /tmp/ansible_key.pem \
+                                        -o BatchMode=yes \
+                                        -o StrictHostKeyChecking=no \
+                                        -o UserKnownHostsFile=/dev/null \
+                                        -o ConnectTimeout=5 \
+                                        ansible@${env.MASTER} 'echo ok' >/dev/null 2>&1
+                                    """,
+                                    returnStatus: true
+                                )
 
-                    until ssh \
-                        -i /tmp/ansible_key.pem \
-                        -o BatchMode=yes \
-                        -o StrictHostKeyChecking=no \
-                        -o UserKnownHostsFile=/dev/null \
-                        -o ConnectTimeout=5 \
-                        ansible@${env.MASTER} "echo ok" >/dev/null 2>&1
-                    do
-                        echo "Master not ready yet..."
-                        sleep 10
-                    done
+                                if (rc == 0) {
+                                    echo "Master is ready"
+                                    return true
+                                }
 
-                    echo "Master is ready."
+                                echo "Waiting for master..."
+                                sleep 10
+                                return false
+                            }
+                        }
+                    }
 
-                    echo "Waiting for SSH on worker..."
+                    script {
+                        timeout(time: 10, unit: 'MINUTES') {
+                            waitUntil {
+                                def rc = sh(
+                                    script: """
+                                        ssh \
+                                        -i /tmp/ansible_key.pem \
+                                        -o BatchMode=yes \
+                                        -o StrictHostKeyChecking=no \
+                                        -o UserKnownHostsFile=/dev/null \
+                                        -o ConnectTimeout=5 \
+                                        ansible@${env.WORKER} 'echo ok' >/dev/null 2>&1
+                                    """,
+                                    returnStatus: true
+                                )
 
-                    until ssh \
-                        -i /tmp/ansible_key.pem \
-                        -o BatchMode=yes \
-                        -o StrictHostKeyChecking=no \
-                        -o UserKnownHostsFile=/dev/null \
-                        -o ConnectTimeout=5 \
-                        ansible@${env.WORKER} "echo ok" >/dev/null 2>&1
-                    do
-                        echo "Worker not ready yet..."
-                        sleep 10
-                    done
+                                if (rc == 0) {
+                                    echo "Worker is ready"
+                                    return true
+                                }
 
-                    echo "Worker is ready."
+                                echo "Waiting for worker..."
+                                sleep 10
+                                return false
+                            }
+                        }
+                    }
 
                     """
                     /*
