@@ -20,6 +20,12 @@
       ansible.builtin.shell: |
         kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/deployment.yaml
 
+    - name: Copy service manifest
+      ansible.builtin.copy:
+        src: templates/service.yaml
+        dest: /tmp/service.yaml
+        mode: "0644"
+
     - name: Expose Deployment
       ansible.builtin.shell: |
-          kubectl --kubeconfig=/home/ansible/.kube/config apply -f templates/service.yaml  
+        kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/service.yaml
