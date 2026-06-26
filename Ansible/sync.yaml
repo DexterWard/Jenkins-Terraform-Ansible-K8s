@@ -1,0 +1,10 @@
+- name: Kubeadm node
+  hosts: node
+  become: true
+
+  tasks:
+
+    - name: Wait for node to be Ready
+      ansible.builtin.command:
+        cmd: >
+          kubectl wait --for=condition=Ready node/kubeadm-node --timeout=300s
