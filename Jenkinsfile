@@ -72,24 +72,20 @@ pipeline {
                 script {
                     def hostsFile = "${env.WORKSPACE}/Ansible/hosts.ini"
 
-                    sh """
-                    echo 'Create hosts.ini for Ansible provisioning'
-                    
-                    mkdir -p ${env.WORKSPACE}/Ansible
-
-                    cat > ${hostsFile} <<EOF
+                     writeFile file: hostsFile, text: """
                     [master]
-                    ${env.MASTER} ansible_python_interpreter='python3'
+                    ${env.MASTER} ansible_python_interpreter=python3
 
                     [node]
-                    ${env.WORKER} ansible_python_interpreter='python3'
-                    
+                    ${env.WORKER} ansible_python_interpreter=python3
+
                     [kube_cluster:children]
                     master
                     node
-                    EOF
+                    """
+                }
 
-
+                    sh """
                     echo 'Copying the ssh key to execute the playbooks...'
                     cp "$SSH_KEY" /tmp/ansible_key.pem
                     chmod 644 /tmp/ansible_key.pem
@@ -128,7 +124,6 @@ pipeline {
                     sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-sync.yaml
 
                     """
-                }
                 }
                        
             }
