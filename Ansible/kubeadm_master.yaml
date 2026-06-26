@@ -43,9 +43,15 @@
      ansible.builtin.shell: |
       kubectl --kubeconfig=/home/ansible/.kube/config apply --server-side -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/tigera-operator.yaml
 
-   - name: Install calico
+   - name: Copy Calico custom resources
+     ansible.builtin.copy:
+      src: custom-resources.yaml
+      dest: /tmp/custom-resources.yaml
+      mode: "0644"
+
+   - name: Install Calico
      ansible.builtin.shell: |
-      kubectl --kubeconfig=/home/ansible/.kube/config apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.1/manifests/custom-resources.yaml
+      kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/custom-resources.yaml
 
    - name: Install helm
      ansible.builtin.shell: |
@@ -57,7 +63,7 @@
      ansible.builtin.shell: |
       kubeadm token create --print-join-command > /tmp/join.sh
 
-   - name: Fetch file
+   - name: Fetch join file
      ansible.builtin.fetch:
       src: /tmp/join.sh
       dest: /tmp/join.sh
