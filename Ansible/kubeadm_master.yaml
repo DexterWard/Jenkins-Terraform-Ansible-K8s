@@ -63,10 +63,26 @@
       dest: /tmp/join.sh
       flat: true
 
-   - name: Wait for Calico to be ready
-     ansible.builtin.shell: |
-       sleep 30
-       kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready node --all --timeout=300s
-       kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready pod -l k8s-app=calico-node -n calico-system --timeout=600s
-       kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready pod -l k8s-app=kube-proxy -n kube-system --timeout=600s
-       kubectl --kubeconfig=/home/ansible/.kube/config rollout status deployment/coredns -n kube-system --timeout=300s
+   - name: Wait before checking cluster
+     ansible.builtin.pause:
+      seconds: 30
+
+   - name: Wait for nodes
+     ansible.builtin.command:
+      cmd: >
+        kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready node --all --timeout=300s
+
+   - name: Wait for Calico
+     ansible.builtin.command:
+      cmd: >
+        kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready pod -l k8s-app=calico-node -n calico-system --timeout=600s
+
+   - name: Wait for kube-proxy
+     ansible.builtin.command:
+      cmd: >
+        kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready pod -l k8s-app=kube-proxy -n kube-system --timeout=600s
+
+   - name: Wait for CoreDNS rollout
+     ansible.builtin.command:
+      cmd: >
+        kubectl --kubeconfig=/home/ansible/.kube/config rollout status deployment/coredns -n kube-system --timeout=300s
