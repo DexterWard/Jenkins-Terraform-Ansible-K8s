@@ -100,7 +100,7 @@ pipeline {
                         fi
 
                         echo "waiting for ssh on ${MASTER}..."
-                        sleep 5
+                        sleep 20
                     done
 
                     for i in {1..30}; do
@@ -110,7 +110,7 @@ pipeline {
                         fi
 
                         echo "waiting for ssh on ${WORKER}..."
-                        sleep 5
+                        sleep 20
                     done
         
 
