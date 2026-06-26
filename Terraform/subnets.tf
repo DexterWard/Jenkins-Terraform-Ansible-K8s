@@ -13,9 +13,9 @@ resource "aws_subnet" "public_a" {
   availability_zone = "eu-central-1a"
 
   tags = {
-  "Name" = "Public subnet A"
-  "kubernetes.io/cluster/kubernetes" = "shared"
-  "kubernetes.io/role/elb"           = "1"
+    "Name"                             = "Public subnet A"
+    "kubernetes.io/cluster/kubernetes" = "shared"
+    "kubernetes.io/role/elb"           = "1"
   }
 }
 
@@ -25,9 +25,9 @@ resource "aws_subnet" "public_b" {
   availability_zone = "eu-central-1b"
 
   tags = {
-  "Name" = "Public subnet B"
-  "kubernetes.io/cluster/kubernetes" = "shared"
-  "kubernetes.io/role/elb"           = "1"
+    "Name"                             = "Public subnet B"
+    "kubernetes.io/cluster/kubernetes" = "shared"
+    "kubernetes.io/role/elb"           = "1"
   }
 }
 

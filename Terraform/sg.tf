@@ -1,5 +1,5 @@
 resource "aws_security_group" "k8s" {
-  name = "k8s-sg"
+  name   = "k8s-sg"
   vpc_id = aws_vpc.main.id
 }
 

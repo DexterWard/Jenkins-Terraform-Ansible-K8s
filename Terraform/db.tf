@@ -10,7 +10,7 @@ resource "aws_db_instance" "db1" {
   password               = var.db_password
   vpc_security_group_ids = [aws_security_group.db.id]
   depends_on             = [aws_security_group.db]
-  
+
 }
 
 data "aws_db_instance" "database" {
