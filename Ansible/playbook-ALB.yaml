@@ -17,6 +17,12 @@
         namespace: kube-system
       EOF
 
+   - name: Wait for cert-manager
+     ansible.builtin.shell: |
+      kubectl --kubeconfig=/home/ansible/.kube/config rollout status deployment/cert-manager -n cert-manager --timeout=300s
+      kubectl --kubeconfig=/home/ansible/.kube/config rollout status deployment/cert-manager-webhook -n cert-manager --timeout=300s
+      kubectl --kubeconfig=/home/ansible/.kube/config rollout status deployment/cert-manager-cainjector -n cert-manager --timeout=300s
+
    - name: Install load balancer controller
      environment:
       KUBECONFIG: /home/ansible/.kube/config
