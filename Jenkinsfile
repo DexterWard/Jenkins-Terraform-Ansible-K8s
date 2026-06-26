@@ -169,8 +169,6 @@ pipeline {
                 echo "Creating ingress..."
                 sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-ingress.yaml
                 """
-
-            //    sh 'echo "DB_HOST=$DB_HOST"'
                 
             }
         }
@@ -180,7 +178,6 @@ pipeline {
         failure {
             echo 'Something went wrong, reverting changes...'
             //sh 'kubectl rollout undo deployment/myapp'
-            //docker tag demo-app:${BUILD_NUMBER} $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/my-project:${BUILD_NUMBER}
         }
     }
 }
