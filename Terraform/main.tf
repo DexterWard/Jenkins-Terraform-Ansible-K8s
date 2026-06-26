@@ -86,10 +86,10 @@ resource "aws_instance" "kubeadm" {
   }*/
 }
 
-output "master" {
-  value = aws_instance.kubeadm[0].private_ip
+output "master_dns" {
+  value = aws_instance.kubeadm[0].private_dns
 }
 
-output "worker" {
-  value = aws_instance.kubeadm[1].private_ip
+output "worker_dns" {
+  value = aws_instance.kubeadm[1].private_dns
 }
