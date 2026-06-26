@@ -41,11 +41,12 @@ resource "aws_vpc_security_group_egress_rule" "egress" {
 
 resource "aws_security_group" "db" {
   name = "db-sg"
+  vpc_id = aws_vpc.main.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "postgre_connection" {
   security_group_id = aws_security_group.db.id
-  cidr_ipv4         = "172.31.0.0/16"
+  referenced_security_group_id = aws_security_group.k8s.id
   from_port         = 5432
   ip_protocol       = "tcp"
   to_port           = 5432

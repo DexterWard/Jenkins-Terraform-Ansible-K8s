@@ -6,11 +6,11 @@ resource "aws_db_instance" "db1" {
   engine                 = "postgres"
   username               = "postgres"
   skip_final_snapshot    = true
-  publicly_accessible    = true
+  publicly_accessible    = false
   password               = var.db_password
   vpc_security_group_ids = [aws_security_group.db.id]
   depends_on             = [aws_security_group.db]
-
+  db_subnet_group_name    = aws_db_subnet_group.db.name
 }
 
 data "aws_db_instance" "database" {
