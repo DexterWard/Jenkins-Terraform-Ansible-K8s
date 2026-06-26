@@ -92,6 +92,7 @@ pipeline {
                     
                     sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${MASTER}' || true
                     sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${WORKER}' || true
+                    """
 
                     script {
                         timeout(time: 10, unit: 'MINUTES') {
@@ -149,7 +150,7 @@ pipeline {
                         }
                     }
 
-                    """
+                    
                     /*
                     for i in {1..30}; do
                         if sudo -u ansible sh -c 'ssh-keyscan -H ${MASTER} >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
