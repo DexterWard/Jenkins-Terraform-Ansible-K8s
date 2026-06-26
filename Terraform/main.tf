@@ -37,6 +37,7 @@ resource "aws_instance" "kubeadm" {
   key_name             = "Jenkins-Terraform-Ansible-K8s"
   iam_instance_profile = aws_iam_instance_profile.kubeadm_profile.name
   source_dest_check    = false
+  associate_public_ip_address = true
 
   subnet_id = element(
     [
