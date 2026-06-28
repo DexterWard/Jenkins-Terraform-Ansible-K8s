@@ -50,5 +50,7 @@
             .securityGroup.groupID
           }}                      
 
-    - debug:
-        var: alb_sg
+    - name: Save ALB security group ID
+      ansible.builtin.copy:
+      dest: /tmp/alb_sg.txt
+      content: "{{ alb_sg }}"

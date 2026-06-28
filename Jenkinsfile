@@ -248,7 +248,7 @@ pipeline {
         stage('AWS') {
             steps {
                     sh """
-                    echo "Adding NodePort port to the k8s security group..."
+                    echo "Adding NodePort port range from the ALB to the k8s security group..."
                     """
                 script {    
                     def albSG = sh(
