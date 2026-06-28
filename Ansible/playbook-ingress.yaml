@@ -13,6 +13,6 @@
    - name: Apply ingress
      ansible.builtin.shell: kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/ingress.yaml
 
-   - name: Wait for ALB and target group to be provisioned
+   - name: Wait for ALB and target group to be provisioned (240 seconds)
      ansible.builtin.pause:
       seconds: 240
