@@ -39,10 +39,10 @@
 
    - name: Patch providerID master
      ansible.builtin.shell: |
-       kubectl --kubeconfig=/home/ansible/.kube/config kubectl patch node kubeadm-master \
+       kubectl --kubeconfig=/home/ansible/.kube/config patch node kubeadm-master \
         -p "{\"spec\":{\"providerID\":\"{{ provider_master }}\"}}"
 
    - name: Patch providerID worker
      ansible.builtin.shell: |
-       kubectl --kubeconfig=/home/ansible/.kube/config kubectl patch node kubeadm-node \
+       kubectl --kubeconfig=/home/ansible/.kube/config patch node kubeadm-node \
         -p "{\"spec\":{\"providerID\":\"{{ provider_worker }}\"}}"
