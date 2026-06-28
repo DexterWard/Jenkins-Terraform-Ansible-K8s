@@ -14,17 +14,19 @@
      ansible.builtin.shell: kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/ingress.yaml
 
    - name: Wait for TargetGroupBinding to exist
-     kubernetes.core.k8s_info:
-      kubeconfig: /home/ansible/.kube/config
-      api_version: elbv2.k8s.aws/v1beta1
-      kind: TargetGroupBinding
-      namespace: default
+     ansible.builtin.command:
+      cmd: >
+        kubectl
+        --kubeconfig=/home/ansible/.kube/config
+        get targetgroupbinding
+        -n default
+        -o json
      register: tgb
-     delegate_to: localhost
-     until: tgb.resources | length > 0
+     changed_when: false
+     until: (tgb.stdout | from_json).items | length > 0
      retries: 30
      delay: 10
-
+ 
    - name: Get Target Group ARN
      set_fact:
       tg_arn: "{{ tgb.resources[0].spec.targetGroupARN }}"

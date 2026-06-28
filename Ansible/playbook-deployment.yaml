@@ -30,20 +30,25 @@
       ansible.builtin.shell: |
         kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/service.yaml
 
-    - name: Get TargetGroupBinding
-      kubernetes.core.k8s_info:
-        kubeconfig: /home/ansible/.kube/config
-        kind: TargetGroupBinding
-        namespace: default
-      register: tgb
-      delegate_to: localhost
+    - name: Get TargetGroupBinding as JSON
+      ansible.builtin.command:
+      cmd: >
+        kubectl
+        --kubeconfig=/home/ansible/.kube/config
+        get targetgroupbinding
+        -n default
+        -o json
+      register: tgb_json
+      changed_when: false
 
-    - name: Extract ALB SG
-      set_fact:
+    - name: Extract ALB security group
+      ansible.builtin.set_fact:
         alb_sg: >-
-          {{ tgb.resources[0].spec.networking.ingress[0].from[0].securityGroup.groupID }}
+          {{
+            (tgb_json.stdout | from_json).items[0]
+            .spec.networking.ingress[0].from[0]
+            .securityGroup.groupID
+          }}                      
 
-    - name: Save ALB SG
-      copy:
-        dest: /tmp/alb_sg.txt
-        content: "{{ alb_sg }}"
+    - debug:
+        var: alb_sg
