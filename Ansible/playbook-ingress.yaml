@@ -26,14 +26,14 @@
      until: (tgb.stdout | from_json).items | length > 0
      retries: 30
      delay: 10
- 
+
    - name: Get Target Group ARN
-     set_fact:
+     ansible.builtin.set_fact:
       tg_arn: "{{ tgb.resources[0].spec.targetGroupARN }}"
 
    - name: Get TargetGroupBinding as JSON
      ansible.builtin.command:
-        cmd: >
+      cmd: >
           kubectl
           --kubeconfig=/home/ansible/.kube/config
           get targetgroupbinding
@@ -44,7 +44,7 @@
 
    - name: Extract ALB security group
      ansible.builtin.set_fact:
-        alb_sg: >-
+      alb_sg: >-
           {{
             (tgb_json.stdout | from_json).items[0]
             .spec.networking.ingress[0].from[0]
@@ -53,23 +53,28 @@
 
    - name: Save ALB security group ID
      ansible.builtin.copy:
-        dest: /tmp/alb_sg.txt
-        content: "{{ alb_sg }}"
-        mode: "0644"
+      dest: /tmp/alb_sg.txt
+      content: "{{ alb_sg }}"
+      mode: "0644"
 
    - name: Wait for healthy targets
-     amazon.aws.elb_target_info:
-       target_group_arn: "{{ tg_arn }}"
+     ansible.builtin.command:
+      cmd: >
+        aws elbv2 describe-target-health
+        --target-group-arn {{ tg_arn }}
+        --output json
      register: tg_health
-     delegate_to: localhost
+     changed_when: false
      until: >
-        tg_health.target_health_descriptions
-        | selectattr('target_health.state', 'equalto', 'healthy')
-        | list
-        | length > 0
+      (
+        tg_health.stdout | from_json
+      ).TargetHealthDescriptions
+      | selectattr('TargetHealth.State', 'equalto', 'healthy')
+      | list
+      | length > 0
      retries: 30
      delay: 10
 
    - name: Output readiness
-     debug:
+     ansible.builtin.debug:
       msg: "ALB READY - TG healthy"
