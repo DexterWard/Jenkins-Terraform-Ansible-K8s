@@ -54,7 +54,8 @@ pipeline {
                     env.WORKER_INSTANCE_IDS = sh(script: "terraform output -json worker_instance_ids", returnStdout: true).trim()
                     env.PROVIDER_MASTER = "aws:///eu-central-1/${env.MASTER_INSTANCE_ID}"
                     def workers = readJSON text: env.WORKER_INSTANCE_IDS
-                    env.PROVIDER_WORKERS = workers.collect {"aws:///${REGION}/${it}"}.join(" ")
+                    env.PROVIDER_WORKERS = workers.collect { id ->
+                    "aws:/// ${REGION}/${id}".replaceAll(" ", "")}.join(" ")
                 }
 
                 }
