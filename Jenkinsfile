@@ -250,12 +250,12 @@ pipeline {
                     sh """
                     echo "Adding NodePort port to the k8s security group..."
                     """
-
+                script {    
                     def albSG = sh(
                         script: "cat /tmp/alb_sg.txt",
                         returnStdout: true
                     ).trim()
-
+                }
                     sh """
                     echo "ALB SG: ${albSG}"
 
