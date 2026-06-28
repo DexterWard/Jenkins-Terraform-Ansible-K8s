@@ -235,7 +235,7 @@ pipeline {
                 echo "Authenticating into ECR..."
                 sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/ansible/.local/bin/ansible-playbook  --private-key /tmp/ansible_key.pem -e "region=${REGION}" -e "aws_access_key_id=${AWS_ACCESS_KEY_ID}" -e "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" -e "ecr_server=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com" ${env.WORKSPACE}/Ansible/playbook-ecr-secret.yaml
 
-                echo "Creating deployment and ClusterIP service..."
+                echo "Creating deployment and NodePort service..."
                 sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/ansible/.local/bin/ansible-playbook  --private-key /tmp/ansible_key.pem -e "ACCOUNT_ID=${ACCOUNT_ID}" -e "db_host=${DB_HOST}" -e "db_pass=${DB_PASS}" -e "REGION=${REGION}" -e "IMAGE_TAG=${BUILD_NUMBER}" ${env.WORKSPACE}/Ansible/playbook-deployment.yaml
 
                 echo "Creating ingress..."
