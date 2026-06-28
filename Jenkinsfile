@@ -266,9 +266,9 @@ pipeline {
                     --source-group ${albSG}
                     """
                     
-                }
             }
         }
+        
     }
 
     post {
