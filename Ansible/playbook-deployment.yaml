@@ -29,3 +29,20 @@
     - name: Expose Deployment
       ansible.builtin.shell: |
         kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/service.yaml
+
+    - name: Get TargetGroupBinding
+      kubernetes.core.k8s_info:
+        kubeconfig: /home/ansible/.kube/config
+        kind: TargetGroupBinding
+        namespace: default
+      register: tgb
+
+    - name: Extract ALB SG
+      set_fact:
+        alb_sg: >-
+          {{ tgb.resources[0].spec.networking.ingress[0].from[0].securityGroup.groupID }}
+
+    - name: Save ALB SG
+      copy:
+        dest: /tmp/alb_sg.txt
+        content: "{{ alb_sg }}"

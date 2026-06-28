@@ -13,6 +13,33 @@
    - name: Apply ingress
      ansible.builtin.shell: kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/ingress.yaml
 
-   - name: Wait for ALB and target group to be provisioned (240 seconds)
-     ansible.builtin.pause:
-      seconds: 240
+   - name: Wait for TargetGroupBinding to exist
+     kubernetes.core.k8s_info:
+      kubeconfig: /home/ansible/.kube/config
+      api_version: elbv2.k8s.aws/v1beta1
+      kind: TargetGroupBinding
+      namespace: default
+     register: tgb
+     until: tgb.resources | length > 0
+     retries: 30
+     delay: 10
+
+   - name: Get Target Group ARN
+     set_fact:
+      tg_arn: "{{ tgb.resources[0].spec.targetGroupARN }}"
+
+   - name: Wait for healthy targets
+     amazon.aws.elb_target_info:
+       target_group_arn: "{{ tg_arn }}"
+     register: tg_health
+     until: >
+        tg_health.target_health_descriptions
+        | selectattr('target_health.state', 'equalto', 'healthy')
+        | list
+        | length > 0
+     retries: 30
+     delay: 10
+
+   - name: Output readiness
+     debug:
+      msg: "ALB READY - TG healthy"

@@ -247,20 +247,18 @@ pipeline {
 
         stage('AWS') {
             steps {
-                script {
+                    sh """
+                    echo "Adding NodePort port to the k8s security group..."
+                    """
+
                     def albSG = sh(
-                        script: """
-                        export KUBECONFIG=/home/ansible/.kube/config
-                        kubectl get targetgroupbinding -n default \
-                        -o jsonpath='{.items[0].spec.networking.ingress[0].from[0].securityGroup.groupID}'
-                        """,
+                        script: "cat /tmp/alb_sg.txt",
                         returnStdout: true
                     ).trim()
 
-                    echo "ALB Security Group: ${albSG}"
-
                     sh """
-                    echo "Adding NodePort port to the k8s security group..."
+                    echo "ALB SG: ${albSG}"
+
                     aws ec2 authorize-security-group-ingress \
                     --group-name k8s-sg \
                     --protocol tcp \
