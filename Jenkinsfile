@@ -246,25 +246,27 @@ pipeline {
 
         stage('AWS') {
             steps {
-                def albSG = sh(
-                    script: """
-                    sudo -u ansible kubectl get targetgroupbinding -n default \
-                    -o jsonpath='{.items[0].spec.networking.ingress[0].from[0].securityGroup.groupID}'
-                    """,
-                    returnStdout: true
-                ).trim()
+                script {
+                    def albSG = sh(
+                        script: """
+                        sudo -u ansible kubectl get targetgroupbinding -n default \
+                        -o jsonpath='{.items[0].spec.networking.ingress[0].from[0].securityGroup.groupID}'
+                        """,
+                        returnStdout: true
+                    ).trim()
 
-                echo "ALB Security Group: ${albSG}"
+                    echo "ALB Security Group: ${albSG}"
 
-                dir("${env.WORKSPACE}/Terraform") {
-                sh """
-                echo "Adding NodePort port to the k8s security group..."
-                aws ec2 authorize-security-group-ingress \
-                --group-name k8s-sg \
-                --protocol tcp \
-                --port 30000-32767 \
-                --source-group ${albSG}
-                """
+                    dir("${env.WORKSPACE}/Terraform") {
+                    sh """
+                    echo "Adding NodePort port to the k8s security group..."
+                    aws ec2 authorize-security-group-ingress \
+                    --group-name k8s-sg \
+                    --protocol tcp \
+                    --port 30000-32767 \
+                    --source-group ${albSG}
+                    """
+                    }
                 }
             }
         }
