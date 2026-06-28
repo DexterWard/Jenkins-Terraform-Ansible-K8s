@@ -20,6 +20,7 @@
       kind: TargetGroupBinding
       namespace: default
      register: tgb
+     delegate_to: localhost
      until: tgb.resources | length > 0
      retries: 30
      delay: 10
@@ -32,6 +33,7 @@
      amazon.aws.elb_target_info:
        target_group_arn: "{{ tg_arn }}"
      register: tg_health
+     delegate_to: localhost
      until: >
         tg_health.target_health_descriptions
         | selectattr('target_health.state', 'equalto', 'healthy')

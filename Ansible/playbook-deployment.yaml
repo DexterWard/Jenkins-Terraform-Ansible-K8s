@@ -36,6 +36,7 @@
         kind: TargetGroupBinding
         namespace: default
       register: tgb
+      delegate_to: localhost
 
     - name: Extract ALB SG
       set_fact:
