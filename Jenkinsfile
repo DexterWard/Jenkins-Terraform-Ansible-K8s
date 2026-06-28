@@ -98,7 +98,7 @@ pipeline {
                     sh """
                     sudo -u ansible rm -f /home/ansible/.ssh/known_hosts
                     sudo -u ansible touch /home/ansible/.ssh/known_hosts
-                    chmod 600 /home/ansible/.ssh/known_hosts
+                    sudo -u ansible chmod 600 /home/ansible/.ssh/known_hosts
                     """
 
                     script {
