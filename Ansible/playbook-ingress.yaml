@@ -20,10 +20,11 @@
         --kubeconfig=/home/ansible/.kube/config
         get targetgroupbinding
         -n default
-        -o json
+        -o jsonpath={.items[0].metadata.name}
      register: tgb
      changed_when: false
-     until: (tgb.stdout | from_json).items | length > 0
+     failed_when: false
+     until: tgb.stdout | trim | length > 0
      retries: 30
      delay: 10
 
