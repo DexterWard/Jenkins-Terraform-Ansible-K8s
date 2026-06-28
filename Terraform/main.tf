@@ -94,3 +94,11 @@ output "master_dns" {
 output "worker_dns" {
   value = aws_instance.kubeadm[1].private_dns
 }
+
+output "master_instance_id" {
+  value = aws_instance.kubeadm[0].id
+}
+
+output "worker_instance_ids" {
+  value = aws_instance.kubeadm[*].id
+}

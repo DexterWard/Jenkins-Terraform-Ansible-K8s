@@ -28,8 +28,6 @@ pipeline {
         stage('Terraform') {
             
             steps {
-
-              //  dir('/home/jenkins/workspace/Project1/Terraform') {
   
                 dir("${env.WORKSPACE}/Terraform") {
                 sh 'echo "Linting Terraform code..."'
@@ -52,6 +50,11 @@ pipeline {
                     env.DB_HOST = sh(script: 'terraform output -raw database_address', returnStdout: true).trim()
                     env.MASTER = sh(script: 'terraform output -raw master_dns', returnStdout: true).trim()
                     env.WORKER = sh(script: 'terraform output -raw worker_dns', returnStdout: true).trim()
+                    env.MASTER_INSTANCE_ID = sh(script: "terraform output -raw master_instance_id", returnStdout: true).trim()
+                    env.WORKER_INSTANCE_IDS = sh(script: "terraform output -json worker_instance_ids", returnStdout: true).trim()
+                    env.PROVIDER_MASTER = "aws:///eu-central-1/${env.MASTER_INSTANCE_ID}"
+                    def workers = readJSON text: env.WORKER_INSTANCE_IDS
+                    env.PROVIDER_WORKERS = workers.collect {"aws:///${REGION}/${it}"}.join(" ")
                 }
 
                 }
@@ -220,7 +223,8 @@ pipeline {
 
                 sh """
                 echo "Installing Kubernetes objects..."
-                sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg  /home/ansible/.local/bin/ansible-playbook --private-key /tmp/ansible_key.pem -e "vpc_id=${VPC_ID}" -e "region=${REGION}" ${env.WORKSPACE}/Ansible/playbook-ALB.yaml
+                echo ${VPC_ID}
+                sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg  /home/ansible/.local/bin/ansible-playbook --private-key /tmp/ansible_key.pem -e "vpc_id=${VPC_ID}" -e "region=${REGION}"  -e "provider_master=${env.PROVIDER_MASTER}" -e "provider_worker=${env.PROVIDER_WORKERS}" ${env.WORKSPACE}/Ansible/playbook-ALB.yaml
     
                 echo "Deploying app"
 
@@ -237,6 +241,31 @@ pipeline {
                 sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/ansible/.local/bin/ansible-playbook --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-ingress.yaml
                 """
                 
+            }
+        }
+
+        stage('AWS') {
+            steps {
+                def albSG = sh(
+                    script: """
+                    sudo -u ansible kubectl get targetgroupbinding -n default \
+                    -o jsonpath='{.items[0].spec.networking.ingress[0].from[0].securityGroup.groupID}'
+                    """,
+                    returnStdout: true
+                ).trim()
+
+                echo "ALB Security Group: ${albSG}"
+
+                dir("${env.WORKSPACE}/Terraform") {
+                sh """
+                echo "Adding NodePort port to the k8s security group..."
+                aws ec2 authorize-security-group-ingress \
+                --group-name k8s-sg \
+                --protocol tcp \
+                --port 30000-32767 \
+                --source-group ${albSG}
+                """
+                }
             }
         }
     }

@@ -36,3 +36,13 @@
       --set serviceAccount.name=aws-load-balancer-controller \
       --set region={{ region }} \
       --set vpcId={{ vpc_id }}
+
+   - name: Patch providerID master
+     ansible.builtin.shell: |
+       kubectl --kubeconfig=/home/ansible/.kube/config kubectl patch node kubeadm-master \
+        -p "{\"spec\":{\"providerID\":\"{{ provider_master }}\"}}"
+
+   - name: Patch providerID worker
+     ansible.builtin.shell: |
+       kubectl --kubeconfig=/home/ansible/.kube/config kubectl patch node kubeadm-node \
+        -p "{\"spec\":{\"providerID\":\"{{ provider_worker }}\"}}"
