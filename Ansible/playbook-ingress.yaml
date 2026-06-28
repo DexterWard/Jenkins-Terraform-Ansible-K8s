@@ -15,4 +15,4 @@
 
    - name: Wait for ALB and target group to be provisioned
      ansible.builtin.pause:
-      seconds: 120
+      seconds: 240
