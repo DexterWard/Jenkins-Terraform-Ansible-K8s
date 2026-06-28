@@ -89,9 +89,16 @@ pipeline {
                     echo 'Copying the ssh key to execute the playbooks...'
                     cp "$SSH_KEY" /tmp/ansible_key.pem
                     chmod 644 /tmp/ansible_key.pem
-                    
+                    """
+                    /*
                     sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${MASTER}' || true
                     sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${WORKER}' || true
+                    */
+
+                    sh """
+                    sudo -u ansible rm -f /home/ansible/.ssh/known_hosts
+                    sudo -u ansible touch /home/ansible/.ssh/known_hosts
+                    chmod 600 /home/ansible/.ssh/known_hosts
                     """
 
                     script {
@@ -173,7 +180,7 @@ pipeline {
                     done*/
         
                     sh """
-                    ANSIBLE_HOST_KEY_CHECKING=False
+                    
                     echo 'Execute the Ansible playbooks in the master node...'
                     sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-kubeadm_master.yaml
                     
