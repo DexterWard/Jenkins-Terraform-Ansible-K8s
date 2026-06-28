@@ -173,6 +173,7 @@ pipeline {
                     done*/
         
                     sh """
+                    ANSIBLE_HOST_KEY_CHECKING=False
                     echo 'Execute the Ansible playbooks in the master node...'
                     sudo -u ansible /home/ansible/.local/bin/ansible-playbook -i ${env.WORKSPACE}/Ansible/hosts.ini --private-key /tmp/ansible_key.pem ${env.WORKSPACE}/Ansible/playbook-kubeadm_master.yaml
                     
