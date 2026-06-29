@@ -33,7 +33,7 @@ pipeline {
                     ssh-keygen \
                     -t ed25519 \
                     -N "" \
-                    -f ${env.WORKSPACE}/keys/ansible
+                    -f ${env.WORKSPACE}/keys/ansible -y
                 """
             }
         }
