@@ -28,29 +28,6 @@
      retries: 30
      delay: 10
 
-   - name: Get ALB security group
-     ansible.builtin.command:
-      cmd: >
-        kubectl
-        --kubeconfig=/home/ansible/.kube/config
-        get targetgroupbinding
-        -n default
-        -o jsonpath={.items[0].spec.networking.ingress[0].from[0].securityGroup.groupID}
-     register: alb_sg
-     changed_when: false
-
-   - name: Save ALB security group ID
-     ansible.builtin.copy:
-      dest: /tmp/alb_sg.txt
-      content: "{{ alb_sg.stdout }}"
-      mode: "0644"
-
-   - name: Fetch ALB SG to Jenkins
-     ansible.builtin.fetch:
-      src: /tmp/alb_sg.txt
-      dest: "{{ lookup('env', 'WORKSPACE') }}/alb_sg.txt"
-      flat: true
-
    - name: Get Target Group ARN
      ansible.builtin.command:
       cmd: >

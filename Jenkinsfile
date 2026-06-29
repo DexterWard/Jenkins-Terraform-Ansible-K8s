@@ -244,27 +244,6 @@ pipeline {
                 
             }
         }
-
-        stage('AWS') {
-            steps {
-                    sh """
-                    echo "Adding NodePort port range from the ALB to the k8s security group..."
-                    """
-                script {    
-                   def albSG = readFile("${env.WORKSPACE}/alb_sg.txt").trim()
-                }
-                    sh """
-                    echo "ALB SG: ${albSG}"
-
-                    aws ec2 authorize-security-group-ingress \
-                    --group-name k8s-sg \
-                    --protocol tcp \
-                    --port 30000-32767 \
-                    --source-group ${albSG}
-                    """
-                    
-            }
-        }
         
     }
 
