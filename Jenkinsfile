@@ -37,9 +37,8 @@ pipeline {
                     -N "" \
                     -f ${env.ANSIBLE_KEY}
 
-                    sudo chown ansible:ansible ${env.ANSIBLE_KEY}*
-                    sudo chmod 600 ${env.ANSIBLE_KEY}
-                    sudo chmod 644 ${env.ANSIBLE_KEY}.pub
+                    chmod 600 ${env.ANSIBLE_KEY}
+                    chmod 644 ${env.ANSIBLE_KEY}.pub
                 """
 
                 script{
