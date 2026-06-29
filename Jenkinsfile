@@ -160,28 +160,6 @@ pipeline {
                             }
                         }
                     }
-
-                    
-                    /*
-                    for i in {1..30}; do
-                        if sudo -u ansible sh -c 'ssh-keyscan -H ${MASTER} >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
-                            echo "SSH ready on ${MASTER}"
-                            break
-                        fi
-
-                        echo "waiting for ssh on ${MASTER}..."
-                        sleep 20
-                    done
-
-                    for i in {1..30}; do
-                        if sudo -u ansible sh -c 'ssh-keyscan -H ${WORKER} >> /home/ansible/.ssh/known_hosts' 2>/dev/null; then
-                            echo "SSH ready on ${WORKER}"
-                            break
-                        fi
-
-                        echo "waiting for ssh on ${WORKER}..."
-                        sleep 20
-                    done*/
         
                     sh """
                     
