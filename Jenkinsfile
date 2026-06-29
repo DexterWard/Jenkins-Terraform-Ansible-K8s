@@ -133,13 +133,13 @@ pipeline {
                             waitUntil {
                                 def rc = sh(
                                     script: """
-                                        sudo -u ansible ssh \
+                                        ssh \
                                         -i ${env.ANSIBLE_KEY} \
                                         -o BatchMode=yes \
                                         -o StrictHostKeyChecking=no \
                                         -o UserKnownHostsFile=/dev/null \
                                         -o ConnectTimeout=5 \
-                                        ansible@${env.MASTER} 'echo ok' >/dev/null 2>&1
+                                        ansible@${env.MASTER} 'echo ok'
                                     """,
                                     returnStatus: true
                                 )
@@ -161,13 +161,13 @@ pipeline {
                             waitUntil {
                                 def rc = sh(
                                     script: """
-                                        sudo -u ansible ssh \
+                                        ssh \
                                         -i ${env.ANSIBLE_KEY} \
                                         -o BatchMode=yes \
                                         -o StrictHostKeyChecking=no \
                                         -o UserKnownHostsFile=/dev/null \
                                         -o ConnectTimeout=5 \
-                                        ansible@${env.WORKER} 'echo ok' >/dev/null 2>&1
+                                        ansible@${env.WORKER} 'echo ok'
                                     """,
                                     returnStatus: true
                                 )
