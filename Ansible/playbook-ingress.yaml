@@ -45,6 +45,12 @@
       content: "{{ alb_sg.stdout }}"
       mode: "0644"
 
+   - name: Fetch ALB SG to Jenkins
+     ansible.builtin.fetch:
+      src: /tmp/alb_sg.txt
+      dest: "{{ lookup('env', 'WORKSPACE') }}/alb_sg.txt"
+      flat: true
+
    - name: Get Target Group ARN
      ansible.builtin.command:
       cmd: >

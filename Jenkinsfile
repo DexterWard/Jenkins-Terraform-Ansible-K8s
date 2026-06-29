@@ -251,10 +251,7 @@ pipeline {
                     echo "Adding NodePort port range from the ALB to the k8s security group..."
                     """
                 script {    
-                    def albSG = sh(
-                        script: "cat /tmp/alb_sg.txt",
-                        returnStdout: true
-                    ).trim()
+                   def albSG = readFile("${env.WORKSPACE}/alb_sg.txt").trim()
                 }
                     sh """
                     echo "ALB SG: ${albSG}"
