@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+     triggers {
+        githubPush()
+    }
+
+
     environment {
                 ACCESS_KEY = credentials('ACCESS_KEY')
                 SECRET_KEY = credentials('SECRET_KEY')
@@ -240,7 +245,7 @@ pipeline {
 
     post {
         failure {
-            echo 'Something went wrong, reverting changes...'
+            echo 'Something went wrong, reverting changes....'
             //sh 'kubectl rollout undo deployment/myapp'
         }
     }
