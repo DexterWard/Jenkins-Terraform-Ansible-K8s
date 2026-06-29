@@ -20,11 +20,11 @@
         --kubeconfig=/home/ansible/.kube/config
         get targetgroupbinding
         -n default
-        -o jsonpath={.items[0].metadata.name}
-     register: tgb
+        -o jsonpath={.items[0].status.loadBalancer.ingress[0].hostname}
+     register: alb_hostname
      changed_when: false
      failed_when: false
-     until: tgb.stdout | trim | length > 0
+     until: alb_hostname.stdout | trim | length > 0
      retries: 30
      delay: 10
 
@@ -62,3 +62,7 @@
    - name: Output readiness
      ansible.builtin.debug:
       msg: "ALB READY - TG healthy"
+
+   - name: Show ALB URL
+     ansible.builtin.debug:
+      msg: "APPLICATION AVAILABLE AT http://{{ alb_hostname.stdout }}"
