@@ -187,7 +187,7 @@ pipeline {
                     sh """
                     
                     echo 'Execute the Ansible playbooks in the master node...'
-                    sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/ansible/.local/bin/ansible-playbook  --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-kubeadm_master.yaml
+                    ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg ansible-playbook  --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-kubeadm_master.yaml
                     
                     echo 'Execute the Ansible playbooks in the worker node...'
                     sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/ansible/.local/bin/ansible-playbook  --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-kubeadm_node.yaml

@@ -42,3 +42,5 @@ useradd -m -s /bin/bash ansible
 #Install Ansible
 su -u ansible -c "pipx install --include-deps ansible"
 su -u ansible -c "pipx install ansible-core"
+
+sudo -u jenkins pipx install ansible
