@@ -23,12 +23,6 @@ pipeline {
             }
 
     stages {
-/*
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }*/
 
         stage('Create ssh keys') {
             steps {
@@ -40,6 +34,8 @@ pipeline {
                     -N "" \
                     -f ${env.WORKSPACE}/keys/ansible -y
                 """
+
+                env.ANSIBLE_PUBKEY = readFile("${env.WORKSPACE}/keys/ansible.pub").trim()
             }
         }
 
@@ -70,7 +66,7 @@ pipeline {
                     env.WORKER = sh(script: 'terraform output -raw worker_dns', returnStdout: true).trim()
                     env.MASTER_INSTANCE_ID = sh(script: "terraform output -raw master_instance_id", returnStdout: true).trim()
                     env.WORKER_INSTANCE_IDS = sh(script: "terraform output -json worker_instance_ids", returnStdout: true).trim()
-                    env.PROVIDER_MASTER = "aws:///eu-central-1/${env.MASTER_INSTANCE_ID}"
+                    env.PROVIDER_MASTER = "aws:///${REGION}/${env.MASTER_INSTANCE_ID}"
                     def workers = readJSON text: env.WORKER_INSTANCE_IDS
                     env.PROVIDER_WORKERS = workers.collect { id ->
                     "aws:///${REGION}/${id}".replaceAll(" ", "")}.join(" ")
@@ -220,6 +216,8 @@ pipeline {
 
                 sh """
                 echo "Installing Kubernetes objects..."
+
+                echo "Installing the ALB..."
                 echo ${VPC_ID}
                 sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg  /home/ansible/.local/bin/ansible-playbook --private-key /tmp/ansible_key.pem -e "vpc_id=${VPC_ID}" -e "region=${REGION}"  -e "provider_master=${env.PROVIDER_MASTER}" -e "provider_worker=${env.PROVIDER_WORKERS}" ${env.WORKSPACE}/Ansible/playbook-ALB.yaml
     
