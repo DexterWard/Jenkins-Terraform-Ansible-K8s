@@ -35,7 +35,9 @@ pipeline {
                     -f ${env.WORKSPACE}/keys/ansible -y
                 """
 
-                env.ANSIBLE_PUBKEY = readFile("${env.WORKSPACE}/keys/ansible.pub").trim()
+                script{
+                    env.ANSIBLE_PUBKEY = readFile("${env.WORKSPACE}/keys/ansible.pub").trim()
+                }
             }
         }
 
