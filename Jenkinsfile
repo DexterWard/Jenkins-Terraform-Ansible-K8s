@@ -5,14 +5,14 @@ pipeline {
                 ACCESS_KEY = credentials('ACCESS_KEY')
                 SECRET_KEY = credentials('SECRET_KEY')
                 ACCOUNT_ID = credentials('ACCOUNT_ID')
-                REGION = credentials('REGION')
+                REGION = "eu-central-1"
                 INSTANCE_TYPE = credentials('INSTANCE_TYPE')
                 AMI = credentials('AMI')
                 DB_PASS = credentials('db_password')
 
                 AWS_ACCESS_KEY_ID = "${ACCESS_KEY}"
                 AWS_SECRET_ACCESS_KEY = "${SECRET_KEY}"
-                AWS_DEFAULT_REGION = "${REGION}"
+                AWS_DEFAULT_REGION = "eu-central-1"
                
                 
             }
