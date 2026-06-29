@@ -18,7 +18,7 @@
       cmd: >
         kubectl
         --kubeconfig=/home/ansible/.kube/config
-        get targetgroupbinding
+        get ingress
         -n default
         -o jsonpath={.items[0].status.loadBalancer.ingress[0].hostname}
      register: alb_hostname

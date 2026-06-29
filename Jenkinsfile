@@ -25,6 +25,19 @@ pipeline {
             }
         }
 
+        stage(Create ssh keys) {
+            steps {
+                sh """
+                    mkdir -p ${env.WORKSPACE}/keys
+
+                    ssh-keygen \
+                    -t ed25519 \
+                    -N "" \
+                    -f ${env.WORKSPACE}/keys/ansible
+                """
+            }
+        }
+
         stage('Terraform') {
             
             steps {
