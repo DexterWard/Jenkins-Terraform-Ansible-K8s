@@ -27,5 +27,5 @@
       sysctl --system
 
    - name: Join the cluster
-     ansible.builtin.shell: bash /tmp/join.sh
+     ansible.builtin.shell: /bin/bash /tmp/join.sh
      when: not kubelet_conf.stat.exists
