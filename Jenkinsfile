@@ -23,12 +23,12 @@ pipeline {
             }
 
     stages {
-
+/*
         stage('Checkout') {
             steps {
                 checkout scm
             }
-        }
+        }*/
 
         stage('Create ssh keys') {
             steps {

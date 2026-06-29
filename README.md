@@ -1,14 +1,15 @@
 # Jenkins-Terraform-Ansible-K8s
-This repository contains the code to create a Jenkins pipeline using a Docker container in an AWS EC2 instance that uses a Jenkins agent to create another instance with Terraform, provision it with an Ansible module to create a Kubernetes cluster with Kubeadm and serve a simple web page with Nginx. The idea is to show a conceptual proof of all these technologies.
+This repository contains the code to create a Jenkins pipeline using a Docker container in an AWS EC2 instance that creates 2 instances with Terraform, provision them with Ansible modules to create a Kubernetes cluster with Kubeadm and serve a simple web page that connects to an RDS database. The idea is to show a conceptual proof of all these technologies.
 
 Technologies used:
 - AWS for the virtual machines that serve as Jenkins master, Jenkins agent and K8s cluster control-plane/worker node
 - Docker to deploy the Jenkins master node
 - Jenkins to create and run the pipeline
-- Terraform to create the K8s node
-- Ansible to provision the Kubernetes node
+- Terraform to create the K8s nodes
+- Ansible to provision the Kubernetes nodes
 - Kubeadm to build the K8s cluster
-- Nginx to server a static website
+- Python and flask to serve a web app
+- RDS as the database connected to the app
 
 
 
@@ -17,7 +18,7 @@ STEPS:
 1) Create a Github repository
 2) Create an AWS EC2 instance. Recommended settings:
 
-- AMI: Ubuntu Server 24.04 LTS
+- AMI: Ubuntu Server 26.04 LTS
 - Architecture: 64-bit
 - Instance type: t3.small (free-tier)
 - Create a new RSA key-pair with .pem format
@@ -38,7 +39,7 @@ and check that docker and Jenkins are running with: docker ps
 -
 3) Get the Jenkins admin password by login into the server via ssh and executing the following command: docker exec -ti jenkins sh -c "cat /var/jenkins_home/secrets/initialAdminPassword" Then, install the suggested plugins and create an admin user and password to log in.
 
-4) Create a new EC2 instance (the jenkins agent) with the same settings but with only port 22 open. Upload as user-script to provision the machine the file: "startup-scrip-jenkins-agent.sh". This will install Terraform, Python3 and Ansible
+4) Create a new EC2 instance (the jenkins agent) with the same settings but with only port 22 open (both to your public IP and to the Jenkins controller). Provision the machine the file: "startup-scrip-jenkins-agent.sh". This will install Terraform, Python3 and Ansible
 
 5) Log into the Jenkins master node and create a new pair of ssh keys:
   - ssh-keygen -t rsa -b 4096 -f jenkins_agent_key
