@@ -59,7 +59,8 @@ pipeline {
                 -var="secret_key=${SECRET_KEY}" \
                 -var="instance_type=${INSTANCE_TYPE}" \
                 -var="ami=${AMI}" \
-                -var="db_password=${DB_PASS}"
+                -var="db_password=${DB_PASS}" \
+                -var="ansible_pubkey=${env.ANSIBLE_PUBKEY}"
                 """
                 script {
                     env.VPC_ID = sh(script: 'terraform output -raw vpc_id', returnStdout: true).trim()

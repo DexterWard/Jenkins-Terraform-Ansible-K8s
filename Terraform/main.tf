@@ -58,7 +58,8 @@ resource "aws_instance" "kubeadm" {
   }
 
   user_data = templatefile("${path.module}/userdata.sh", {
-    ansible_pubkey = file("${path.module}/ansible.pub")
+    //ansible_pubkey = file("${path.module}/ansible.pub")
+    ansible_pubkey = var.ansible_pubkey
   })
 
   user_data_replace_on_change = true
