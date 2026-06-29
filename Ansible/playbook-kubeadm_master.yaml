@@ -53,17 +53,18 @@
 
    - name: Print join command
      ansible.builtin.shell: |
-      kubeadm token create --print-join-command > /tmp/join.sh
+      kubeadm token create --print-join-command
+     register: join_cmd
 
-   - name: Fetch join file
-     ansible.builtin.fetch:
-      src: /tmp/join.sh
+   - name: Save join command on remote
+     ansible.builtin.copy:
       dest: /tmp/join.sh
-      flat: true
+      content: "{{ join_cmd.stdout }}"
+      mode: "0755"
 
    - name: Wait before checking cluster
      ansible.builtin.pause:
-      seconds: 30
+      seconds: 10
 
    - name: Wait for nodes
      ansible.builtin.command:
