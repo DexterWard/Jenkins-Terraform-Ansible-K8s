@@ -33,6 +33,7 @@ pipeline {
                     -t ed25519 \
                     -N "" \
                     -f ${env.WORKSPACE}/keys/ansible -y
+                    sudo -u ansible chmod 644 ${env.WORKSPACE}/keys/ansible.pub
                 """
 
                 script{
