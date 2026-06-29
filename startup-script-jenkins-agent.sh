@@ -42,10 +42,3 @@ useradd -m -s /bin/bash ansible
 #Install Ansible
 su -u ansible -c "pipx install --include-deps ansible"
 su -u ansible -c "pipx install ansible-core"
-
-#Install k8s collection
-su - ansible -c "ansible-galaxy collection install kubernetes.core"
-su - ansible -c "ansible-galaxy collection install amazon.aws"
-
-#Install Python dependencies
-su - ansible -c "pipx runpip ansible install kubernetes PyYAML jsonpatch boto3 botocore"
