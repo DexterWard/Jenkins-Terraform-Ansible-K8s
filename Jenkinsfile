@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        stage(Create ssh keys) {
+        stage('Create ssh keys') {
             steps {
                 sh """
                     mkdir -p ${env.WORKSPACE}/keys
