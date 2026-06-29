@@ -29,7 +29,7 @@ pipeline {
                 sh """
                     mkdir -p ${env.WORKSPACE}/keys
 
-                    ssh-keygen \
+                    sudo -u ansible -c ssh-keygen \
                     -t ed25519 \
                     -N "" \
                     -f ${env.WORKSPACE}/keys/ansible -y
