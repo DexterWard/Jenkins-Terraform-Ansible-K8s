@@ -190,10 +190,10 @@ pipeline {
                     ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook  --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-kubeadm_master.yaml
                     
                     echo 'Execute the Ansible playbooks in the worker node...'
-                    sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/ansible/.local/bin/ansible-playbook  --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-kubeadm_node.yaml
+                    ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook  --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-kubeadm_node.yaml
 
                     echo 'Execute the synchronization playbook...'
-                    sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/ansible/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-sync.yaml
+                    ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-sync.yaml
 
                     """
                 }
@@ -228,21 +228,21 @@ pipeline {
 
                 echo "Installing the ALB..."
                 echo ${VPC_ID}
-                sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg  /home/ansible/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} -e "vpc_id=${VPC_ID}" -e "region=${REGION}"  -e "provider_master=${env.PROVIDER_MASTER}" -e "provider_worker=${env.PROVIDER_WORKERS}" ${env.WORKSPACE}/Ansible/playbook-ALB.yaml
+                ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} -e "vpc_id=${VPC_ID}" -e "region=${REGION}"  -e "provider_master=${env.PROVIDER_MASTER}" -e "provider_worker=${env.PROVIDER_WORKERS}" ${env.WORKSPACE}/Ansible/playbook-ALB.yaml
     
                 echo "Deploying app"
 
                 echo "Creating secret..."
-                sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/ansible/.local/bin/ansible-playbook  --private-key ${env.ANSIBLE_KEY} -e "db_host=${DB_HOST}" -e "db_pass=${DB_PASS}" ${env.WORKSPACE}/Ansible/playbook-rds-secret.yaml
+                ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook  --private-key ${env.ANSIBLE_KEY} -e "db_host=${DB_HOST}" -e "db_pass=${DB_PASS}" ${env.WORKSPACE}/Ansible/playbook-rds-secret.yaml
 
                 echo "Authenticating into ECR..."
-                sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/ansible/.local/bin/ansible-playbook  --private-key ${env.ANSIBLE_KEY} -e "region=${REGION}" -e "aws_access_key_id=${AWS_ACCESS_KEY_ID}" -e "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" -e "ecr_server=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com" ${env.WORKSPACE}/Ansible/playbook-ecr-secret.yaml
+                ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} -e "region=${REGION}" -e "aws_access_key_id=${AWS_ACCESS_KEY_ID}" -e "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" -e "ecr_server=${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com" ${env.WORKSPACE}/Ansible/playbook-ecr-secret.yaml
 
                 echo "Creating deployment and NodePort service..."
-                sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/ansible/.local/bin/ansible-playbook  --private-key ${env.ANSIBLE_KEY} -e "ACCOUNT_ID=${ACCOUNT_ID}" -e "db_host=${DB_HOST}" -e "db_pass=${DB_PASS}" -e "REGION=${REGION}" -e "IMAGE_TAG=${BUILD_NUMBER}" ${env.WORKSPACE}/Ansible/playbook-deployment.yaml
+                ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} -e "ACCOUNT_ID=${ACCOUNT_ID}" -e "db_host=${DB_HOST}" -e "db_pass=${DB_PASS}" -e "REGION=${REGION}" -e "IMAGE_TAG=${BUILD_NUMBER}" ${env.WORKSPACE}/Ansible/playbook-deployment.yaml
 
                 echo "Creating ingress..."
-                sudo -u ansible ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/ansible/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-ingress.yaml
+                ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-ingress.yaml
                 """
                 
             }
