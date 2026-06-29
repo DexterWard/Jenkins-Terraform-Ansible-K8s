@@ -11,14 +11,6 @@ resource "aws_vpc_security_group_ingress_rule" "ssh_my_ip" {
   to_port           = 22
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ansible_ping" {
-  security_group_id = aws_security_group.k8s.id
-  cidr_ipv4         = "172.31.0.0/16"
-  ip_protocol       = "icmp"
-  from_port         = -1
-  to_port           = -1
-}
-
 resource "aws_vpc_security_group_ingress_rule" "k8s_api" {
   security_group_id = aws_security_group.k8s.id
   cidr_ipv4         = "172.31.0.0/16"
