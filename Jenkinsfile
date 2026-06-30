@@ -89,13 +89,6 @@ pipeline {
         stage('Ansible') {
             steps {
 
-                withCredentials([
-                    sshUserPrivateKey(
-                        credentialsId: 'ansible-private-key',
-                        keyFileVariable: 'SSH_KEY'
-                    )
-                ]) {
-
                 script {
                     def hostsFile = "${env.WORKSPACE}/Ansible/hosts.ini"
 
@@ -111,16 +104,6 @@ pipeline {
                     node
                     """
                 }
-
-                    sh """
-                    echo 'Copying the ssh key to execute the playbooks...'
-                    cp "$SSH_KEY" /tmp/ansible_key.pem
-                    chmod 644 /tmp/ansible_key.pem
-                    """
-                    /*
-                    sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${MASTER}' || true
-                    sudo -u ansible ssh-keygen -f '/home/ansible/.ssh/known_hosts' -R '${WORKER}' || true
-                    */
 
                     sh """
                     sudo -u ansible rm -f /home/ansible/.ssh/known_hosts
@@ -196,7 +179,6 @@ pipeline {
                     ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-sync.yaml
 
                     """
-                }
                        
             }
         }
