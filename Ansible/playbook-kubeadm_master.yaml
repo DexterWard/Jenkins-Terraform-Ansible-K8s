@@ -57,6 +57,7 @@
      register: join_cmd
 
    - name: Save join command on remote
+     delegate_to: localhost
      ansible.builtin.copy:
       dest: /tmp/join.sh
       content: "{{ join_cmd.stdout }}"
