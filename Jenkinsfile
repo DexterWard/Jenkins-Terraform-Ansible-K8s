@@ -51,6 +51,10 @@ pipeline {
         stage('Terraform') {
             
             steps {
+
+                export AWS_ACCESS_KEY_ID=${ACCESS_KEY}
+                export AWS_SECRET_ACCESS_KEY=${SECRET_KEY}
+                export AWS_DEFAULT_REGION=${REGION}
   
                 dir("${env.WORKSPACE}/Terraform") {
                 sh 'echo "Linting Terraform code..."'
