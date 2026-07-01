@@ -68,7 +68,7 @@ pipeline {
                 -var="instance_type=${INSTANCE_TYPE}" \
                 -var="ami=${AMI}" \
                 -var="db_password=${DB_PASS}" \
-                -var="ansible_pubkey=${env.ANSIBLE_PUBKEY}"
+                -var="ansible_pubkey=${env.ANSIBLE_PUBKEY}" \
                 -var="bucket=${BUCKET}"
                 """
                 script {
