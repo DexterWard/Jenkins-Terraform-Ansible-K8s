@@ -50,3 +50,7 @@ su -u ansible -c "pipx install ansible-core"
 
 su -u jenkins -c "pipx install ansible"
 
+#Allow ssh connections between nodes
+sed -i s/#PubkeyAuthentication/PubkeyAuthentication/g /etc/ssh/sshd_config
+sed -i s/#AuthorizedKeysFile/AuthorizedKeysFile/g /etc/ssh/sshd_config
+systemctl restart ssdh
