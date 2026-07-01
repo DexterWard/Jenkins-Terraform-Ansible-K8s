@@ -55,5 +55,8 @@ sed -i s/#PubkeyAuthentication/PubkeyAuthentication/g /etc/ssh/sshd_config
 sed -i s/#AuthorizedKeysFile/AuthorizedKeysFile/g /etc/ssh/sshd_config
 systemctl restart ssdh
 
+mkdir /home/jenkins/.ssh
+touch /home/jenkins/.ssh/authorized_keys
+
 #Increate /tmp
 mount -o remount,size=4G /tmp

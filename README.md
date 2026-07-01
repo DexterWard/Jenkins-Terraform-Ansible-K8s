@@ -42,7 +42,7 @@ and check that docker and Jenkins are running with: docker ps
 4) Create a new EC2 instance (the jenkins agent) with the same settings but with only port 22 open (both to your public IP and to the Jenkins controller). Provision the machine the file: "startup-scrip-jenkins-agent.sh". This will install Terraform, Python3 and Ansible
 
 5) Log into the Jenkins master node and create a new pair of ssh keys:
-  - ssh-keygen -t rsa -b 4096 -f jenkins_agent_key
+  - ssh-keygen -t rsa -b 4096 -m PEM -f jenkins_agent_key
   - Copy the public key you just created: cat jenkins_agent_key.pub
   - Paste it in  the authorized_keys file of the agent
 
