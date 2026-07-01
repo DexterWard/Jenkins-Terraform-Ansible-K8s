@@ -58,5 +58,5 @@ systemctl restart sshd
 mkdir /home/jenkins/.ssh
 touch /home/jenkins/.ssh/authorized_keys
 
-#Increate /tmp
+#Increase /tmp
 mount -o remount,size=4G /tmp

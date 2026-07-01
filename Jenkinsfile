@@ -114,13 +114,6 @@ pipeline {
                     node
                     """
                 }
-/*
-                    sh """
-                    sudo -u ansible rm -f /home/ansible/.ssh/known_hosts
-                    sudo -u ansible touch /home/ansible/.ssh/known_hosts
-                    sudo -u ansible chmod 600 /home/ansible/.ssh/known_hosts
-                    """
-                    */
 
                     script {
                         timeout(time: 10, unit: 'MINUTES') {
