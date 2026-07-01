@@ -16,6 +16,11 @@ groupadd docker
 useradd -m -s /bin/bash jenkins
 usermod -aG docker jenkins
 
+su -u jenkins -c "mkdir -p /home/jenkins/.ssh"
+su -u jenkins -c "touch /home/jenkins/.ssh/authorized_keys"
+chmod 700 /home/jenkins/.ssh
+chmod 600 /home/jenkins/.ssh/authorized_keys
+
 #Install aws cli
 apt install unzip
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -43,4 +48,5 @@ useradd -m -s /bin/bash ansible
 su -u ansible -c "pipx install --include-deps ansible"
 su -u ansible -c "pipx install ansible-core"
 
-sudo -u jenkins pipx install ansible
+su -u jenkins -c "pipx install ansible"
+

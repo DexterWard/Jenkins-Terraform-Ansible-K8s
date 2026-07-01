@@ -45,12 +45,6 @@ and check that docker and Jenkins are running with: docker ps
   - ssh-keygen -t rsa -b 4096 -f jenkins_agent_key
   - Copy the public key you just created: cat jenkins_agent_key.pub
   - Paste it in  the authorized_keys file of the agent:
-    sudo su - jenkins;
-    mkdir -p ~/.ssh;
-    nano ~/.ssh/authorized_keys
-  - Fix the permissions:
-    chmod 700 ~/.ssh;
-    chmod 600 ~/.ssh/authorized_keys
 
 6) Log into the public IP of the Jenkins master via port 8080 and add credentials for the new node:
   - Manage Jenkins --> Credentials --> SSH Username with private key --> Username: jenkins Private key: Enter directly --> Paste the contents of "jenkins_agent_key" --> Create
