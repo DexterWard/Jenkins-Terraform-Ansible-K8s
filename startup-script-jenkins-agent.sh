@@ -54,3 +54,6 @@ su -u jenkins -c "pipx install ansible"
 sed -i s/#PubkeyAuthentication/PubkeyAuthentication/g /etc/ssh/sshd_config
 sed -i s/#AuthorizedKeysFile/AuthorizedKeysFile/g /etc/ssh/sshd_config
 systemctl restart ssdh
+
+#Increate /tmp
+mount -o remount,size=4G /tmp
