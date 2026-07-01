@@ -51,14 +51,15 @@ pipeline {
         stage('Terraform') {
             
             steps {
-
-                export AWS_ACCESS_KEY_ID=${ACCESS_KEY}
-                export AWS_SECRET_ACCESS_KEY=${SECRET_KEY}
-                export AWS_DEFAULT_REGION=${REGION}
   
                 dir("${env.WORKSPACE}/Terraform") {
                 sh 'echo "Linting Terraform code..."'
                 sh 'terraform fmt'
+                sh """
+                export AWS_ACCESS_KEY_ID=${ACCESS_KEY}
+                export AWS_SECRET_ACCESS_KEY=${SECRET_KEY}
+                export AWS_DEFAULT_REGION=${REGION}
+                """
                 sh 'echo "Initialize Terraform plugins and providers..."'
                 sh 'terraform init -reconfigure -backend-config="bucket=${BUCKET}" \
                 -var="access_key=${ACCESS_KEY}" \
