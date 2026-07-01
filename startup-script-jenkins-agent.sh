@@ -45,10 +45,10 @@ useradd -m -s /bin/bash ansible
 #su -u ansible -c "pipx ensurepath"
 
 #Install Ansible
-su -u ansible -c "pipx install --include-deps ansible"
-su -u ansible -c "pipx install ansible-core"
+su - ansible -c "pipx install --include-deps ansible"
+su - ansible -c "pipx install ansible-core"
 
-su -u jenkins -c "pipx install ansible"
+su - jenkins -c "pipx install ansible ansible-core"
 
 #Allow ssh connections between nodes
 sed -i s/#PubkeyAuthentication/PubkeyAuthentication/g /etc/ssh/sshd_config
