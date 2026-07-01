@@ -57,6 +57,8 @@ pipeline {
                 sh 'terraform fmt'
                 sh 'echo "Initialize Terraform plugins and providers..."'
                 sh 'terraform init -reconfigure -backend-config="bucket=${BUCKET}" \
+                -var="access_key=${ACCESS_KEY}" \
+                -var="secret_key=${SECRET_KEY}" \
                 -backend-config="encrypt=true"'
                 
                 sh 'echo "Applying changes..."'
