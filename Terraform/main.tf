@@ -7,9 +7,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "var.bucket"
+    bucket = var.bucket
     key    = "terraform.tfstate"
-    region = "var.region"
+    region = var.region
   }
 }
 
