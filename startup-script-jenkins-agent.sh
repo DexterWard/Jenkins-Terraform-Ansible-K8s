@@ -18,6 +18,7 @@ usermod -aG docker jenkins
 
 su -u jenkins -c "mkdir -p /home/jenkins/.ssh"
 su -u jenkins -c "touch /home/jenkins/.ssh/authorized_keys"
+chown jenkins:jenkins /home/jenkins/.ssh/authorized_keys
 chmod 700 /home/jenkins/.ssh
 chmod 600 /home/jenkins/.ssh/authorized_keys
 
