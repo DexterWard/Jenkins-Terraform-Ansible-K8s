@@ -5,3 +5,4 @@ variable "access_key" {}
 variable "secret_key" {}
 variable "db_password" {}
 variable "ansible_pubkey" {}
+variable "bucket" {}

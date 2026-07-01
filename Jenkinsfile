@@ -14,6 +14,7 @@ pipeline {
                 INSTANCE_TYPE = credentials('INSTANCE_TYPE')
                 AMI = credentials('AMI')
                 DB_PASS = credentials('db_password')
+                BUCKET = credentials('bucket')
 
                 AWS_ACCESS_KEY_ID = "${ACCESS_KEY}"
                 AWS_SECRET_ACCESS_KEY = "${SECRET_KEY}"
@@ -55,7 +56,8 @@ pipeline {
                 sh 'echo "Linting Terraform code..."'
                 sh 'terraform fmt'
                 sh 'echo "Initialize Terraform plugins and providers..."'
-                sh 'terraform init -reconfigure'
+                sh 'terraform init -reconfigure -backend-config="bucket=${BUCKET}" \
+                -backend-config="encrypt=true"'
                 
                 sh 'echo "Applying changes..."'
                 sh """
@@ -67,6 +69,7 @@ pipeline {
                 -var="ami=${AMI}" \
                 -var="db_password=${DB_PASS}" \
                 -var="ansible_pubkey=${env.ANSIBLE_PUBKEY}"
+                -var="bucket=${BUCKET}"
                 """
                 script {
                     env.VPC_ID = sh(script: 'terraform output -raw vpc_id', returnStdout: true).trim()
