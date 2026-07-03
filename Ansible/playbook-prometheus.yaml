@@ -12,6 +12,6 @@
     - name: Install or upgrade kube-prometheus-stack
       ansible.builtin.shell: |
         helm upgrade --install prometheus oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack \
-          -f /tmp/values-monitoring.yaml
+          -f /tmp/values-monitoring.yaml --kubeconfig=/home/ansible/.kube/config
       register: prometheus_helm
       changed_when: "'Release \"prometheus\" has been upgraded' in prometheus_helm.stdout or 'Release \"prometheus\" has been installed' in prometheus_helm.stdout"
