@@ -12,7 +12,7 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "public_a" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "172.31.1.0/24"
-  availability_zone       = "eu-central-1a"
+  availability_zone       = "eu-central-1b"
   map_public_ip_on_launch = "true"
 
   tags = {
@@ -25,7 +25,7 @@ resource "aws_subnet" "public_a" {
 resource "aws_subnet" "public_b" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "172.31.2.0/24"
-  availability_zone       = "eu-central-1b"
+  availability_zone       = "eu-central-1c"
   map_public_ip_on_launch = "true"
 
   tags = {
@@ -38,13 +38,13 @@ resource "aws_subnet" "public_b" {
 resource "aws_subnet" "db_a" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "172.31.10.0/24"
-  availability_zone = "eu-central-1a"
+  availability_zone = "eu-central-1b"
 }
 
 resource "aws_subnet" "db_b" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "172.31.11.0/24"
-  availability_zone = "eu-central-1b"
+  availability_zone = "eu-central-1c"
 }
 
 resource "aws_db_subnet_group" "db" {
