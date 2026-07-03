@@ -45,13 +45,15 @@ resource "aws_instance" "kubeadm" {
   source_dest_check           = false
   associate_public_ip_address = true
 
-  subnet_id = element(
+ /* subnet_id = element(
     [
       aws_subnet.public_a.id,
       aws_subnet.public_b.id
     ],
     count.index
-  )
+  )*/
+
+  subnet_id = aws_subnet.public_b.id
 
   root_block_device {
     volume_size = 20
