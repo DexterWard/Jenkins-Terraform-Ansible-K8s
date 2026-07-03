@@ -227,11 +227,12 @@ pipeline {
                 echo "Creating deployment and NodePort service..."
                 ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} -e "ACCOUNT_ID=${ACCOUNT_ID}" -e "db_host=${DB_HOST}" -e "db_pass=${DB_PASS}" -e "REGION=${REGION}" -e "IMAGE_TAG=${BUILD_NUMBER}" ${env.WORKSPACE}/Ansible/playbook-deployment.yaml
 
-                echo "Creating ingress..."
-                ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-ingress.yaml
-
                 echo "Creating prometheus stack..."
                 ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-prometheus.yaml
+
+                  echo "Creating ingress..."
+                ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-ingress.yaml
+
                 """                
             }
         }
