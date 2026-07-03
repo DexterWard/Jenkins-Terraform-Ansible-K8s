@@ -39,13 +39,22 @@ resource "aws_subnet" "db_a" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "172.31.10.0/24"
   availability_zone = "eu-central-1a"
+
+  tags = {
+    "Name" = "DB subnet A"
+  }
 }
 
 resource "aws_subnet" "db_b" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "172.31.11.0/24"
   availability_zone = "eu-central-1b"
+
+  tags = {
+    "Name" = "DB subnet B"
+  }
 }
+
 
 resource "aws_db_subnet_group" "db" {
   name = "db-subnet-group"
