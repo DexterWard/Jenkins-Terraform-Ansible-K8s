@@ -10,8 +10,17 @@
       dest: /tmp/ingress.yaml
       mode: "0644"
 
-   - name: Apply ingress
+   - name: Apply ingress for the app
      ansible.builtin.shell: kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/ingress.yaml
+
+   - name: Copy ingress-grafana manifest
+     ansible.builtin.copy:
+      src: templates/grafana-ingress.yaml
+      dest: /tmp/grafana-ingress.yaml
+      mode: "0644"
+
+   - name: Apply ingress for monitoring
+     ansible.builtin.shell: kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/grafana-ingress.yaml
 
    - name: Wait for TargetGroupBinding to exist
      ansible.builtin.command:

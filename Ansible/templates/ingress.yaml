@@ -3,11 +3,9 @@ kind: Ingress
 metadata:
   name: demo-app
   annotations:
-    alb.ingress.kubernetes.io/healthcheck-path: /grafana/login
-    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/success-codes: 200,302
     alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/group.name: main
 spec:
   ingressClassName: alb
   rules:
