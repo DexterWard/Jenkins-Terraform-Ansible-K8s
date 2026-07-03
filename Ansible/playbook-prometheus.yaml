@@ -1,0 +1,17 @@
+- name: prometheus
+  hosts: master
+  become: true
+
+  tasks:
+    - name: Copy monitoring values file
+      ansible.builtin.copy:
+        src: templates/values-monitoring.yaml
+        dest: /tmp/values-monitoring.yaml
+        mode: "0644"
+
+    - name: Install or upgrade kube-prometheus-stack
+      ansible.builtin.shell: |
+        helm upgrade --install prometheus oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack \
+          -f /tmp/values-monitoring.yaml
+      register: prometheus_helm
+      changed_when: "'Release \"prometheus\" has been upgraded' in prometheus_helm.stdout or 'Release \"prometheus\" has been installed' in prometheus_helm.stdout"

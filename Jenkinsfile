@@ -229,8 +229,10 @@ pipeline {
 
                 echo "Creating ingress..."
                 ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-ingress.yaml
-                """
-                
+
+                echo "Creating prometheus stack..."
+                ANSIBLE_CONFIG=${WORKSPACE}/Ansible/ansible.cfg /home/jenkins/.local/bin/ansible-playbook --private-key ${env.ANSIBLE_KEY} ${env.WORKSPACE}/Ansible/playbook-prometheus.yaml
+                """                
             }
         }
         
