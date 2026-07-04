@@ -22,7 +22,7 @@
    - name: Apply ingress for monitoring
      ansible.builtin.shell: kubectl --kubeconfig=/home/ansible/.kube/config apply -f /tmp/grafana-ingress.yaml
 
-   - name: Wait for TargetGroupBinding to exist
+   - name: Wait for app ingress to exist
      ansible.builtin.command:
       cmd: >
         kubectl
@@ -34,6 +34,21 @@
      changed_when: false
      failed_when: false
      until: alb_hostname.stdout | trim | length > 0
+     retries: 30
+     delay: 10
+
+   - name: Get grafana ALB url
+     ansible.builtin.command:
+      cmd: >
+        kubectl
+        --kubeconfig=/home/ansible/.kube/config
+        get ingress
+        -n default
+        -o jsonpath={.items[1].status.loadBalancer.ingress[1].hostname}
+     register: grafana_alb_hostname
+     changed_when: false
+     failed_when: false
+     until: grafana_alb_hostname.stdout | trim | length > 0
      retries: 30
      delay: 10
 
@@ -75,3 +90,7 @@
    - name: Show ALB URL
      ansible.builtin.debug:
       msg: "APPLICATION AVAILABLE AT http://{{ alb_hostname.stdout }}"
+
+   - name: Show GRAFANA URL
+     ansible.builtin.debug:
+      msg: "GRAFANA AVAILABLE AT http://{{ grafana_alb_hostname.stdout }}"
