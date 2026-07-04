@@ -61,3 +61,11 @@ touch /home/jenkins/.ssh/authorized_keys
 
 #Increase /tmp
 mount -o remount,size=4G /tmp
+mkdir -p /etc/systemd/system/tmp.mount.d
+tee /etc/systemd/system/tmp.mount.d/override.conf >/dev/null <<'EOF'
+[Mount]
+Options=mode=1777,nosuid,nodev,size=4G
+EOF
+
+systemctl daemon-reload
+systemctl restart tmp.mount
