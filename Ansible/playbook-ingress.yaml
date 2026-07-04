@@ -93,4 +93,4 @@
 
    - name: Show GRAFANA URL
      ansible.builtin.debug:
-      msg: "GRAFANA AVAILABLE AT http://{{ grafana_alb_hostname.stdout }}"
+      msg: "GRAFANA AVAILABLE AT http://{{ grafana_alb_hostname.stdout }}/grafana"
