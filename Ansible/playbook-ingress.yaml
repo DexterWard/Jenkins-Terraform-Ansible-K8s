@@ -44,7 +44,7 @@
         --kubeconfig=/home/ansible/.kube/config
         get ingress
         -n default
-        -o jsonpath={.items[1].status.loadBalancer.ingress[1].hostname}
+        -o jsonpath={.items[1].status.loadBalancer.ingress[0].hostname}
      register: grafana_alb_hostname
      changed_when: false
      failed_when: false
