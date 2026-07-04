@@ -73,10 +73,10 @@
       cmd: >
         kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready node/kubeadm-master --all --timeout=300s
 
-   - name: Wait for Calico
-     ansible.builtin.command:
-      cmd: >
-        kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready pod -l k8s-app=calico-node -n calico-system --timeout=600s
+#   - name: Wait for Calico
+#     ansible.builtin.command:
+#      cmd: >
+#        kubectl --kubeconfig=/home/ansible/.kube/config wait --for=condition=Ready pod -l k8s-app=calico-node -n calico-system --timeout=600s
 
    - name: Wait for kube-proxy
      ansible.builtin.command:
