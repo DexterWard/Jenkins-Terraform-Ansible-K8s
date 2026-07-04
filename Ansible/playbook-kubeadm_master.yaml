@@ -66,7 +66,7 @@
 
    - name: Wait before checking cluster
      ansible.builtin.pause:
-      seconds: 10
+      seconds: 30
 
    - name: Wait for nodes
      ansible.builtin.command:
