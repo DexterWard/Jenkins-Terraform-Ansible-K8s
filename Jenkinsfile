@@ -31,13 +31,7 @@ pipeline {
             steps {
                 sh """
                     rm -rf ${env.ANSIBLE_KEY}
-
-                    ssh-keygen \
-                    -q \
-                    -t ed25519 \
-                    -N "" \
-                    -f ${env.ANSIBLE_KEY}
-
+                    ssh-keygen -q -t ed25519 -N "" -f ${env.ANSIBLE_KEY}
                     chmod 600 ${env.ANSIBLE_KEY}
                     chmod 644 ${env.ANSIBLE_KEY}.pub
                 """
