@@ -53,21 +53,21 @@ pipeline {
             steps {
   
                 dir("${env.WORKSPACE}/Terraform") {
-                sh 'echo "Linting Terraform code..."'
-                sh 'terraform fmt'
                 sh """
+                echo "Linting Terraform code..."
+                terraform fmt
+                echo "Validating Terraform code..."
+                terraform validate
                 export AWS_ACCESS_KEY_ID=${ACCESS_KEY}
                 export AWS_SECRET_ACCESS_KEY=${SECRET_KEY}
                 export AWS_DEFAULT_REGION=${REGION}
-                """
-                sh 'echo "Initialize Terraform plugins and providers..."'
-                sh 'terraform init -reconfigure -backend-config="bucket=${BUCKET}" \
+                echo "Initialize Terraform plugins and providers..."
+                terraform init -reconfigure -backend-config="bucket=${BUCKET}" \
                 -var="access_key=${ACCESS_KEY}" \
                 -var="secret_key=${SECRET_KEY}" \
-                -backend-config="encrypt=true"'
+                -backend-config="encrypt=true"
                 
-                sh 'echo "Applying changes..."'
-                sh """
+                echo "Applying changes..."
                 terraform apply -auto-approve \
                 -var="region=${REGION}" \
                 -var="access_key=${ACCESS_KEY}" \

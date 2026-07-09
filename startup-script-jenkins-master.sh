@@ -19,6 +19,15 @@ usermod -aG docker jenkins
 su - jenkins -c "newgrp docker"
 su - jenkins -c "docker volume create my-data"
 
+#Create ssh keys to connect with agents
+su - jenkins -c "mkdir /home/jenkins/.ssh"
+mkdir -p /var/jenkins_home/.ssh
+touch /var/jenkins_home/.ssh/known_hosts
+chown -R jenkins:jenkins /var/jenkins_home
+chmod 600 /var/jenkins_home/.ssh/known_hosts
+
+su - jenkins -c "ssh-keygen -t ed25519 -N '' -f /home/jenkins/.ssh/jenkins-agent"
+
 #Start the jenkins container
 su - jenkins -c "docker run -d \
   --name jenkins \
