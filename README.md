@@ -1,6 +1,6 @@
 # Kubeadm infrastructure creator
 
-This repository contains code intended to create a Jenkins pipeline inside a Docker container in an AWS EC2 instance (startup-script-jenkins-master.sh), that when executed, creates 2 machines using Terraform, provision them with Ansible to create a Kubernetes cluster with Kubeadm, and serve a simple web page that connects to an RDS database, accessible via an Application Load Balancer. It is also monitored with a Prometheus/Grafana stack operator. 
+This repository contains code intended to run a Jenkins pipeline inside a Docker container in an AWS EC2 instance provisioned with startup-script-jenkins-master.sh, that when executed, creates 2 machines using Terraform, provision them with Ansible to create a Kubernetes cluster with Kubeadm, and serve a simple web page that connects to an RDS database, accessible via an Application Load Balancer. It is also monitored with a Prometheus/Grafana stack operator. 
 
 The idea is to show a conceptual proof of all these technologies:
 
