@@ -63,8 +63,8 @@ pipeline {
                 export AWS_DEFAULT_REGION=${REGION}
 
 
-                echo "ACCESS_KEY length: ${#ACCESS_KEY}"
-                echo "SECRET_KEY length: ${#SECRET_KEY}"
+                echo "ACCESS_KEY length: ${ACCESS_KEY}"
+                echo "SECRET_KEY length: ${SECRET_KEY}"
                 echo "REGION=${REGION}"
 
                 case "$ACCESS_KEY" in
