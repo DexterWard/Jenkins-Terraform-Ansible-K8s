@@ -34,7 +34,6 @@ STEPS:
 - User data: upload the startup-script-jenkins-master.sh file to provision the server
 
 After initialization, test that Docker is installed and Jenkins is running by connecting to the Public IP address of the instance on port 8080.
-
 If the initial Jenkins screen to input the admin password shows up, then the provisioning was correct. Otherwise connect via ssh to the instance like this:
 ssh -i your-key-pair.pem ubuntu@xxx.xxx.xxx.xxx
 and check that docker and Jenkins are running with: docker ps
