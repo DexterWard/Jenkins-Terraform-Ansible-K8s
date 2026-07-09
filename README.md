@@ -33,12 +33,12 @@ STEPS:
 - No special filesystem
 - User data: upload the startup-script-jenkins-master.sh file to provision the server
 
-After initialization, test that Docker is installed and Jenkins is running by connecting to the Public IP address of the instance on port 8080 .
+After initialization, test that Docker is installed and Jenkins is running by connecting to the Public IP address of the instance on port 8080.
 
 If the initial Jenkins screen to input the admin password shows up, then the provisioning was correct. Otherwise connect via ssh to the instance like this:
 ssh -i your-key-pair.pem ubuntu@xxx.xxx.xxx.xxx
 and check that docker and Jenkins are running with: docker ps
--
+
 3) Get the Jenkins admin password by login into the server via ssh and executing the following command: docker exec -ti jenkins sh -c "cat /var/jenkins_home/secrets/initialAdminPassword" Then, install the suggested plugins + Pipeline Utility Steps and create an admin user and password to log in.
 
 4) Create a new EC2 instance (the jenkins agent) with the same settings but with only port 22 open (both to your public IP and to the Jenkins controller). Provision the machine with the file: "startup-scrip-jenkins-agent.sh". This will install the required dependencies.
