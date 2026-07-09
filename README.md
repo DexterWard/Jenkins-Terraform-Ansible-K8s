@@ -4,15 +4,16 @@ This repository contains code intended to run a Jenkins pipeline inside a Docker
 
 The idea is to show a conceptual proof of all these technologies:
 
-- AWS for all the EC2 instances
-- Docker to deploy Jenkins inside
-- Jenkins to create and run the pipeline
+- AWS EC2 for the underlying infrastructure
+- Jenkins as CI/CD tool to run the pipeline
 - Terraform to create the K8s nodes
 - Ansible to provision the Kubernetes nodes
 - Kubeadm to build the K8s cluster
-- Python and flask to serve a web app
-- RDS as the database connected to the app
+- Python and flask to serve a web app on K8s
+- RDS as the database connected to the app to read and write data
 - Prometheus/Grafana to monitor the infrastructure
+- S3 bucket to act as remote backend for Terraform
+
 
 
 
@@ -66,16 +67,16 @@ and check that docker and Jenkins are running with: docker ps
 - GITHUB - Github token to connect with your code repository
 - db_password - Assign a password to your RDS database
 - bucket - S3 bucket to use as remote backend for the Terraform state file
-- node - Private ssh key for a Jenkins node to use as agent. You need to add a different one per each Jenkins agent.
+- node - Private ssh key for a Jenkins node to use as agent. You need to add a different one per each Jenkins agent (see step 6)
 
 
-10) Create a pipeline job in Jenkins of type SCM and fill out the gitbhub repository and the github credentials.
+10) Create a pipeline job in Jenkins of type Pipeline script from SCM and fill out the gitbhub repository url and the github credentials. Specify the main branch, Jenkinsfile as the Script path and mark GitHub hook trigger for GITScm polling to use Webhooks that trigger the pipeline dynamically.
 
 11) Run the pipeline. It will search for the Jenkinsfile in Github and execute the stages. In the end you will see 2 URLs, one for the application itself and another one to access Grafana and the monitoring stack.
 
 12) Obtain the grafana admin password by executing the following in the kubeadm-master node: kubectl --namespace default get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 
-13) In case that you want to copy the credentials from one server to another use these commands in the jenkins servers:
+13) In case that you want to copy the Jenkins credentials from one server to another use these commands:
 
 - docker stop jenkins
 - sudo rsync -av old:/var/jenkins_home/secrets/ /path/to/jenkins_home/secrets/
