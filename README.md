@@ -56,17 +56,17 @@ and check that docker and Jenkins are running with: docker ps
 
 9) Create the following credentials in the Jenkins web interface so they can be injected as environment variables in the pipeline:
 
-REGION - AWS region to deploy the infrastructure (the s3 bucket for the remote state file should be in this region)
-INSTANCE_TYPE - Type of instances needed for the Kubernetes nodes (recommended: c7i-flex.large)
-AMI - Machine image for the kubernetes nodes (recommended: ami-051eaec1417c5d4ae)
-ACCOUNT_ID - Your AWS account ID
-PROFILE - AWS profile configured in .aws/credentials if needed
-ACCESS_KEY - AWS access key for a privileged user able to create infrastructure
-SECRET_ACCESS_KEY - AWS secret access key for a privileged user able to create infrastructure
-GITHUB - Github token to connect with your code repository
-db_password - Assign a password to your RDS database
-bucket - S3 bucket to use as remote backend for the Terraform state file
-node - Private ssh key for a Jenkins node to use as agent. You need to add a different one per each Jenkins agent.
+- REGION - AWS region to deploy the infrastructure (the s3 bucket for the remote state file should be in this region)
+- INSTANCE_TYPE - Type of instances needed for the Kubernetes nodes (recommended: c7i-flex.large)
+- AMI - Machine image for the kubernetes nodes (recommended: ami-051eaec1417c5d4ae)
+- ACCOUNT_ID - Your AWS account ID
+- PROFILE - AWS profile configured in .aws/credentials if needed
+- ACCESS_KEY - AWS access key for a privileged user able to create infrastructure
+- SECRET_ACCESS_KEY - AWS secret access key for a privileged user able to create infrastructure
+- GITHUB - Github token to connect with your code repository
+- db_password - Assign a password to your RDS database
+- bucket - S3 bucket to use as remote backend for the Terraform state file
+- node - Private ssh key for a Jenkins node to use as agent. You need to add a different one per each Jenkins agent.
 
 
 10) Create a pipeline job in Jenkins of type SCM and fill out the gitbhub repository and the github credentials.
