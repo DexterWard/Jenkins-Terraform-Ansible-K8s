@@ -53,10 +53,34 @@ and check that docker and Jenkins are running with: docker ps
   - New node --> Node name --> Permanent agent --> Adjust the number of executors --> Remote root directory: /home/jenkins -- > Launch method: Launch agents via SSH --> Host: IP address of the agent --> Credentials: Select the credentials created in the previous step --> Host Key Verification Strategy: Non verifying verification strategy
   - Check that the agent is synced and online
 
-8) Create credentials of type "secret text" in the Jenkins web interface so they can be injected as environment variables in the pipeline.
+8) Create a new S3 bucket in AWS to use as remote backend for the Terraform state file.
 
-9) Create a pipeline job in Jenkins of type SCM and fill out the gitbhub repository and the github credentials.
+9) Create the following credentials in the Jenkins web interface so they can be injected as environment variables in the pipeline:
 
-10) Run the pipeline. It will search for the Jenkinsfile in Github and execute the stages. In the end you will see 2 URLs, one for the application itself and another one to access Grafana and the monitoring stack.
+REGION - AWS region to deploy the infrastructure (the s3 bucket for the remote state file should be in this region)
+INSTANCE_TYPE - Type of instances needed for the Kubernetes nodes (recommended: c7i-flex.large)
+AMI - Machine image for the kubernetes nodes (recommended: ami-051eaec1417c5d4ae)
+ACCOUNT_ID - Your AWS account ID
+PROFILE - AWS profile configured in .aws/credentials if needed
+ACCESS_KEY - AWS access key for a privileged user able to create infrastructure
+SECRET_ACCESS_KEY - AWS secret access key for a privileged user able to create infrastructure
+GITHUB - Github token to connect with your code repository
+db_password - Assign a password to your RDS database
+bucket - S3 bucket to use as remote backend for the Terraform state file
+node - Private ssh key for a Jenkins node to use as agent. You need to add a different one per each Jenkins agent.
 
-Obtain the grafana admin password by executing the following in the kubeadm-master node: kubectl --namespace default get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+
+10) Create a pipeline job in Jenkins of type SCM and fill out the gitbhub repository and the github credentials.
+
+11) Run the pipeline. It will search for the Jenkinsfile in Github and execute the stages. In the end you will see 2 URLs, one for the application itself and another one to access Grafana and the monitoring stack.
+
+12) Obtain the grafana admin password by executing the following in the kubeadm-master node: kubectl --namespace default get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
+
+13) In case that you want to copy the credentials from one server to another use these commands in the jenkins servers:
+
+docker stop jenkins
+sudo rsync -av old:/var/jenkins_home/secrets/ /path/to/jenkins_home/secrets/
+sudo rsync -av old:/var/jenkins_home/credentials.xml /path/to/jenkins_home/credentials.xml
+sudo chown -R 1000:1000 /path/to/jenkins_home/secrets /path/to/jenkins_home/credentials.xml
+docker start jenkins
+
