@@ -40,13 +40,11 @@ If the initial Jenkins screen to input the admin password shows up, then the pro
 ssh -i your-key-pair.pem ubuntu@xxx.xxx.xxx.xxx
 and check that docker and Jenkins are running with: docker ps
 -
-3) Get the Jenkins admin password by login into the server via ssh and executing the following command: docker exec -ti jenkins sh -c "cat /var/jenkins_home/secrets/initialAdminPassword" Then, install the suggested plugins and create an admin user and password to log in.
+3) Get the Jenkins admin password by login into the server via ssh and executing the following command: docker exec -ti jenkins sh -c "cat /var/jenkins_home/secrets/initialAdminPassword" Then, install the suggested plugins + Pipeline Utility Steps and create an admin user and password to log in.
 
 4) Create a new EC2 instance (the jenkins agent) with the same settings but with only port 22 open (both to your public IP and to the Jenkins controller). Provision the machine with the file: "startup-scrip-jenkins-agent.sh". This will install the required dependencies.
 
-5) Create a new ssh key-pair to connect Jenkins master and Jenkins agent:
- ssh-keygen -t ed25519 -N "" -f jenkins-agent
- - Copy the public key into /home/jenkins/.ssh/authorized_keys in the agent.
+5) Copy the public key found in /home/jenkins/.ssh/jenkins-agent in the master into /home/jenkins/.ssh/authorized_keys in the agent.
 
 6) Log into the public IP of the Jenkins master via port 8080 and add credentials for the new node:
   - Manage Jenkins --> Credentials --> SSH Username with private key --> Username: jenkins Private key: Enter directly --> Paste the contents of the private ssh key --> Create
@@ -59,4 +57,6 @@ and check that docker and Jenkins are running with: docker ps
 
 9) Create a pipeline job in Jenkins of type SCM and fill out the gitbhub repository and the github credentials.
 
-10) Run the pipeline. It will search for the Jenkinsfile in Github and execute the stages.
+10) Run the pipeline. It will search for the Jenkinsfile in Github and execute the stages. In the end you will see 2 URLs, one for the application itself and another one to access Grafana and the monitoring stack.
+
+Obtain the grafana admin password by executing the following in the kubeadm-master node: kubectl --namespace default get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo

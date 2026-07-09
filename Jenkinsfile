@@ -63,19 +63,6 @@ pipeline {
                 export AWS_DEFAULT_REGION=${REGION}
 
 
-                echo "ACCESS_KEY length: ${ACCESS_KEY}"
-                echo "SECRET_KEY length: ${SECRET_KEY}"
-                echo "REGION=${REGION}"
-
-                case "$ACCESS_KEY" in
-                AKIA*|ASIA*) echo "ACCESS_KEY format looks OK" ;;
-                *) echo "ACCESS_KEY format is WRONG" ;;
-                esac
-
-                printf '%s' "$ACCESS_KEY" | grep -q '/' && echo "ACCESS_KEY contains / - WRONG"
-                printf '%s' "$SECRET_KEY" | grep -q '/' && echo "SECRET_KEY contains / - OK, normal"
-
-
                 echo "Initialize Terraform plugins and providers..."
                 terraform init -reconfigure -backend-config="bucket=${BUCKET}" \
                 -var="access_key=${ACCESS_KEY}" \
