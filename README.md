@@ -33,10 +33,10 @@ STEPS:
 - No special filesystem
 - User data: upload the startup-script-jenkins-master.sh file to provision the server
 
-After initialization, test that Docker is installed and Jenkins is running by connecting to the Public IP address of the instance on port 8080.
+After initialization, test that Docker is installed and Jenkins is running by connecting to the Public IP address of the instance on port using http, like this: http://publicIP:8080.
 
 If the initial Jenkins screen to input the admin password shows up, then the provisioning was correct. Otherwise connect via ssh to the instance like this:
-ssh -i your-key-pair.pem ubuntu@xxx.xxx.xxx.xxx
+ssh -i your-key-pair.pem ubuntu@publicIP
 and check that docker and Jenkins are running with: docker ps
 
 3) Get the Jenkins admin password by login into the server via ssh and executing the following command: docker exec -ti jenkins sh -c "cat /var/jenkins_home/secrets/initialAdminPassword" Then, install the suggested plugins + Pipeline Utility Steps and create an admin user and password to log in.
@@ -77,9 +77,9 @@ and check that docker and Jenkins are running with: docker ps
 
 13) In case that you want to copy the credentials from one server to another use these commands in the jenkins servers:
 
-docker stop jenkins
-sudo rsync -av old:/var/jenkins_home/secrets/ /path/to/jenkins_home/secrets/
-sudo rsync -av old:/var/jenkins_home/credentials.xml /path/to/jenkins_home/credentials.xml
-sudo chown -R 1000:1000 /path/to/jenkins_home/secrets /path/to/jenkins_home/credentials.xml
-docker start jenkins
+- docker stop jenkins
+- sudo rsync -av old:/var/jenkins_home/secrets/ /path/to/jenkins_home/secrets/
+- sudo rsync -av old:/var/jenkins_home/credentials.xml /path/to/jenkins_home/credentials.xml
+- sudo chown -R 1000:1000 /path/to/jenkins_home/secrets /path/to/jenkins_home/credentials.xml
+- docker start jenkins
 
