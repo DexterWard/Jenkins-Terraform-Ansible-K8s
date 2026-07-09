@@ -53,11 +53,11 @@ pipeline {
             steps {
   
                 dir("${env.WORKSPACE}/Terraform") {
+                
                 sh """
                 echo "Linting Terraform code..."
                 terraform fmt
-                echo "Validating Terraform code..."
-                terraform validate
+                
                 export AWS_ACCESS_KEY_ID=${ACCESS_KEY}
                 export AWS_SECRET_ACCESS_KEY=${SECRET_KEY}
                 export AWS_DEFAULT_REGION=${REGION}
@@ -66,6 +66,9 @@ pipeline {
                 -var="access_key=${ACCESS_KEY}" \
                 -var="secret_key=${SECRET_KEY}" \
                 -backend-config="encrypt=true"
+
+                echo "Validating Terraform code..."
+                terraform validate
                 
                 echo "Applying changes..."
                 terraform apply -auto-approve \
